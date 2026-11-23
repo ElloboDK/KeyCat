@@ -1,14 +1,13 @@
 name: Pages
 
 # Publishes the download page: site/ at the root, the shared cat scene from web/ under cat/ (the
-# page's live demo), and stats.json with the download count. Runs again every few hours and
-# when a release goes out, so stats.json stays close to the live count the page also asks for.
+# page's live demo), and stats.json with the download count. Runs again every few hours, so
+# stats.json stays close to the live count the page also asks for. Not on release: that event
+# runs on the tag, and the github-pages environment only accepts deploys from main.
 on:
   push:
     branches: [main]
     paths: ['site/**', 'web/**', 'docs/screenshots/keycat.gif', '.github/workflows/pages.yml']
-  release:
-    types: [published]
   schedule:
     - cron: '17 */3 * * *'
   workflow_dispatch:
