@@ -1,0 +1,19 @@
+.github/workflows/pages.yml
+  s_d14c6ac966648a::t_47efb578e89928 4-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "9dd328601f69b1fe8964d8568651424c4a95e170",
+  "prompts": {},
+  "sessions": {
+    "s_d14c6ac966648a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "82e458df-56be-4353-9c6a-4f641dd4b7ea",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
