@@ -35,8 +35,16 @@ for TAG in "$@"; do
     gh release view "$TAG" --json name,body,targetCommitish > "$WORK/release.json"
     NAME="$(json 'd["name"] or "'"$TAG"'"' < "$WORK/release.json")"
     BODY="$(json 'd["body"] or "'"$TAG"'"' < "$WORK/release.json")"
-    # The tag's own commit, so Gitee never makes the tag on a different commit if the mirror lags.
+    # Gitee rejects a release whose commit it has not mirrored yet, and the mirror can lag GitHub by
+    # several minutes; wait up to 20 minutes for the tag to arrive rather than make it on Gitee.
     COMMIT="$(gh api "repos/{owner}/{repo}/commits/$TAG" -q .sha)"
+    for WAIT in $(seq 1 40); do
+        curl -fsS "$API/tags?access_token=$TOKEN&per_page=100" | json '"\n".join(t["name"] for t in d)' \
+            | grep -qxF "$TAG" && break
+        [ "$WAIT" = 40 ] && { echo "tag $TAG never reached Gitee" >&2; exit 1; }
+        echo "waiting for the Gitee mirror to pick up $TAG"
+        sleep 30
+    done
     # A missing release comes back as 404 with a JSON message, hence no -f here.
     ID="$(curl -sS "$API/releases/tags/$TAG?access_token=$TOKEN" | json '(d or {}).get("id") or ""' 2>/dev/null || true)"
     if [ -z "$ID" ]; then
