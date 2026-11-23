@@ -1,0 +1,41 @@
+.github/workflows/windows.yml
+  s_0e6a6ca48d1a22::t_931494f7a68dc2 1-64
+win/store.js
+  s_0e6a6ca48d1a22::t_4ce6b1edf996fb 1-44
+win/keymap.js
+  s_0e6a6ca48d1a22::t_d33c3e691b568d 1-42
+win/package.json
+  s_0e6a6ca48d1a22::t_cd6dafe0303edf 46-47
+  s_0e6a6ca48d1a22::t_72ada86b8807dc 27
+  s_0e6a6ca48d1a22::t_7f5eb397075c27 1-26,28-45,48-79
+win/package-lock.json
+  s_0e6a6ca48d1a22::t_3eb60c7cec50f3 1-3652
+win/preload.js
+  s_0e6a6ca48d1a22::t_3a66873cd20214 1-16
+win/main.js
+  s_0e6a6ca48d1a22::t_ccaa0cd61ca364 282,284-287
+  s_0e6a6ca48d1a22::t_e5d5c03c81701b 525
+  s_0e6a6ca48d1a22::t_add67eaf68b297 700-701
+  s_0e6a6ca48d1a22::t_15612396b6784a 1-281,283,288-524,526-699,702-728
+README.md
+  s_0e6a6ca48d1a22::t_162f611edd17aa 167
+  s_0e6a6ca48d1a22::t_b4648111adda5e 5-6
+  s_0e6a6ca48d1a22::t_84870f58fab5ec 48-94
+  s_0e6a6ca48d1a22::t_778e8902a9b266 154-159
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "ecff4683a89a9f622dc6fd33ef6b81fb605a86d4",
+  "prompts": {},
+  "sessions": {
+    "s_0e6a6ca48d1a22": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "849d6edd-9f4c-48cf-8acf-8ba7595b1a92",
+        "model": "deepseek-v4-1-flash-261017"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
