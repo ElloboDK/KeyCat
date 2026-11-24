@@ -297,25 +297,63 @@
       g.computeVertexNormals();
       return g;
     });
-    return { geos, meet: earProfile(k, 0).meet };
+    const plain = earProfile(k, 0);
+    return { geos, meet: plain.meet, join: plain.join };
   })());
-  // Turns an ear: `z` leans it out, `x` tips it back. Leaning out, it turns about the middle of
-  // its base, so the part under the cheek swings in. Standing up, about a point just below where
-  // its outer edge meets the head, so the join moves in a touch rather than out; the base below
-  // swings out a little, but sits far enough inside the head not to show.
-  const earRest = new THREE.Euler(), earPivot = V(), earHeld = V();
+  // Turns an ear: `z` leans it out, `x` tips it back. The group itself stays in the rest pose the
+  // shapes were filleted against the head for; what the behaviour asks for on top of that is bent
+  // into the vertices instead, over `EAR_BEND` above the join, so the foot of the ear keeps
+  // meeting the cheek in the one smooth curve it was shaped for. Turned whole, the ear swung its
+  // foot out of the cheek as it stood up, and the join showed as a small spike on each side.
+  // The part that does turn goes about a point just below where the outer edge meets the head
+  // when standing up, about the middle of the base when leaning out.
+  const EAR_BEND = 0.15;
   const turnEar = (ear, z, x) => {
-    ear.group.rotation.set(x, 0, z);
-    earPivot.copy(ear.meet).multiplyScalar(smooth(0, 0.1, ear.tilt + ear.s * z)).multiply(ear.group.scale);
-    earHeld.copy(earPivot).applyEuler(earRest.set(-0.12, 0, -ear.s * ear.tilt));
-    ear.group.position.set(ear.s * EAR_AT.x, EAR_AT.y, EAR_AT.z).add(earHeld).sub(earPivot.applyEuler(ear.group.rotation));
+    const m = ear.tilt + ear.s * z;        // stood up from its rest lean; negative: flattened
+    const f = smooth(0, 0.1, m);
+    const az = ear.s * m, ax = x + 0.12;   // the turn from the rest pose
+    if (Math.abs(az - ear.az) < 1e-4 && Math.abs(ax - ear.ax) < 1e-4 && Math.abs(f - ear.f) < 1e-3) return;
+    Object.assign(ear, { az, ax, f });
+    // The pivot in the group's scaled space; `ear.meet` is in the geometry's own units.
+    const px = ear.meet.x * f, py = ear.meet.y * f * EAR_STRETCH;
+    for (const { base, w, pos, zs, geo } of ear.shapes) {
+      const p = pos.array;
+      for (let i = 0, n = w.length; i < n; i++) {
+        const j = 3 * i, a = w[i];
+        if (a === 0) { p[j] = base[j]; p[j + 1] = base[j + 1]; p[j + 2] = base[j + 2]; continue; }
+        const c = Math.cos(az * a), s = Math.sin(az * a), c2 = Math.cos(ax * a), s2 = Math.sin(ax * a);
+        const vx = base[j] - px, vy = base[j + 1] * EAR_STRETCH - py, vz = base[j + 2] * zs;
+        const rx = vx * c - vy * s, ry = vx * s + vy * c;         // about z: lean
+        p[j] = rx + px;
+        p[j + 1] = (ry * c2 - vz * s2 + py) / EAR_STRETCH;         // about x: tip
+        p[j + 2] = (ry * s2 + vz * c2) / zs;
+      }
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
+    }
   };
   const placeEar = (ear, k) => {
-    const { geos: [geo, rimGeo], meet } = earGeo(k);
-    ear.mesh.geometry = geo;
-    ear.rim.geometry = rimGeo;
+    const { geos, meet, join } = earGeo(k);
+    // Each ear gets its own copy of the shapes to bend; `base` is the rest pose and `w` how much
+    // of the turn each vertex takes, none at the join and all of it `EAR_BEND` above.
+    const top = join + EAR_BEND * (1 + 0.6 * (k - 1));
+    if (ear.shapes) for (const { geo } of ear.shapes) geo.dispose();
+    ear.shapes = [[ear.mesh, 0.5], [ear.rim, 0.5 + 0.06]].map(([mesh, zs], i) => {
+      const src = geos[i], geo = new THREE.BufferGeometry();
+      for (const [name, attr] of Object.entries(src.attributes)) geo.setAttribute(name, name === 'position' || name === 'normal' ? attr.clone() : attr);
+      geo.setIndex(src.index);
+      // Fixed and generous: the bent vertices stay well inside it.
+      geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0.1, 0), 0.7);
+      mesh.geometry = geo;
+      const base = new Float32Array(src.attributes.position.array), w = new Float32Array(base.length / 3);
+      for (let i = 0; i < w.length; i++) w[i] = smooth(join, top, base[3 * i + 1]);
+      return { geo, base, w, zs, pos: geo.attributes.position };
+    });
     ear.tilt = earTilt(k);
     ear.meet = V(ear.s * meet[0], meet[1], 0);
+    ear.group.rotation.set(-0.12, 0, -ear.s * ear.tilt);
+    ear.group.position.set(ear.s * EAR_AT.x, EAR_AT.y, EAR_AT.z);
+    Object.assign(ear, { az: NaN, ax: NaN, f: NaN });
     turnEar(ear, -ear.s * ear.tilt, -0.12);
   };
   const ears = [-1, 1].map(s => {
