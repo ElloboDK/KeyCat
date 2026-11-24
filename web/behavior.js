@@ -15,7 +15,7 @@
     sleep: 0, asleep: false, wakeAt: -100, nextBlink: now() + 3, nextZ: 0,
     rub: 0, busyUntil: now() + 2, lastPaw: 'R', hit: 'none',
     // How worked up the cat is (fast typing, quick mouse moves): wider pupils, livelier tail.
-    excite: 0, strokes: [], tailPhase: 0,
+    excite: 0, strokes: [], tailPhase: 0, breathPhase: 0,
     // An idle fidget: { kind, t0, dur, side }.
     act: null, nextAct: now() + 4,
     // Irritation, 0..1, from key mashing, very fast typing, petting for too long or being woken
@@ -327,7 +327,9 @@
     P.shift.step(shift, dt);
     P.hunch.step(hunch, dt);
     P.squash.step(squash, dt);
-    const breathe = Math.sin(t * mix(2.1, 1.1, S.sleep)) * mix(0.012, 0.02, S.sleep);
+    // Keep the phase continuous as breathing slows down during sleep.
+    S.breathPhase += dt * mix(2.1, 1.1, S.sleep);
+    const breathe = Math.sin(S.breathPhase) * mix(0.012, 0.02, S.sleep);
     cat.bend.x = P.shift.x;
     cat.bend.z = P.hunch.x;
     cat.bend.squash = P.squash.x;
