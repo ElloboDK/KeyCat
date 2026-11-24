@@ -16,3 +16,6 @@ win/node_modules/
 win/target/
 win/gen/
 win/out/
+
+# Local project notes (docs/project/), not part of the repo
+docs/project/
