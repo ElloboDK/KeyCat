@@ -2,7 +2,7 @@
 
 一只趴在键盘上的桌面猫：你打字它伸爪按键，动鼠标它扭头看，摸头会呼噜，没人理会睡着，被烦到会用尾巴捶桌。支持 macOS 13+ 和 Windows 10+，除了从 GitHub 检查和下载更新，不联网。
 
-![KeyCat](docs/screenshots/keycat.gif)
+![KeyCat](docs/screenshots/keycat-tour.gif)
 
 下载页：<https://ellobodk.github.io/KeyCat/>，会按访问者的系统给出对应的安装包，页面上的猫可以直接用键盘鼠标逗。
 
@@ -62,7 +62,7 @@ win/    Windows 外壳（Tauri，Rust）：托盘、全局键鼠钩子、自动�
 web/    两端共用的 three.js 场景：猫、键盘、动作，tuning.js 是可调参数和性格的唯一来源，life.js 是猫记住的东西，
         stats.html 是今日小结
 site/   下载页，由 .github/workflows/pages.yml 连同 web/ 一起部署到 GitHub Pages，每 3 小时刷新一次下载量
-tools/  开发用渲染脚本（serve.py 起本地服务，readme_gif.py 生成 README 动图，其余脚本在内置浏览器里截图对比）
+tools/  开发用渲染脚本（serve.py 起本地服务，tour_gif.py 生成 README 里的功能总览动图，readme_gif.py 生成下载页的预览图，其余脚本在内置浏览器里截图对比）
 ```
 
 ## 说明
