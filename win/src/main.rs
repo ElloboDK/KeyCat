@@ -503,6 +503,10 @@ fn on_input(app: &AppHandle, input: Input) {
         Input::Button { button, down } => on_button(app, button, down),
         // Feed the wheel like a vertical mouse move, as the mac build does.
         Input::Wheel(notches) => host(app).pending_delta.1 += -notches * 0.4,
+        Input::ReleaseKeys => {
+            host(app).held.clear();
+            js(app, "cat.releaseKeys()");
+        }
     }
 }
 

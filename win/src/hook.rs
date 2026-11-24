@@ -17,6 +17,8 @@ pub enum Input {
     Button { button: Button, down: bool },
     /// Wheel notches, positive away from the user.
     Wheel(f64),
+    /// Locking the session can swallow the key-up events for Win+L.
+    ReleaseKeys,
 }
 
 #[cfg(windows)]
@@ -25,14 +27,20 @@ mod imp {
     use std::sync::OnceLock;
     use std::thread;
 
-    use windows::Win32::Foundation::{HINSTANCE, LPARAM, LRESULT, WPARAM};
+    use windows::core::w;
+    use windows::Win32::Foundation::{HINSTANCE, HWND, LPARAM, LRESULT, WPARAM};
     use windows::Win32::System::LibraryLoader::GetModuleHandleW;
+    use windows::Win32::System::RemoteDesktop::{
+        WTSRegisterSessionNotification, WTSUnRegisterSessionNotification, NOTIFY_FOR_THIS_SESSION,
+    };
     use windows::Win32::UI::Input::KeyboardAndMouse::{MapVirtualKeyW, MAPVK_VK_TO_VSC_EX};
     use windows::Win32::UI::WindowsAndMessaging::{
-        CallNextHookEx, DispatchMessageW, GetMessageW, SetWindowsHookExW, HC_ACTION, KBDLLHOOKSTRUCT,
+        CallNextHookEx, CreateWindowExW, DefWindowProcW, DestroyWindow, DispatchMessageW, GetMessageW,
+        RegisterClassW, SetWindowsHookExW, HC_ACTION, HWND_MESSAGE, KBDLLHOOKSTRUCT,
         LLKHF_EXTENDED, MSG, MSLLHOOKSTRUCT, WH_KEYBOARD_LL, WH_MOUSE_LL, WM_KEYDOWN, WM_LBUTTONDOWN,
         WM_LBUTTONUP, WM_MBUTTONDOWN, WM_MBUTTONUP, WM_MOUSEWHEEL, WM_RBUTTONDOWN, WM_RBUTTONUP,
-        WM_SYSKEYDOWN, WM_XBUTTONDOWN, WM_XBUTTONUP,
+        WM_SYSKEYDOWN, WM_WTSSESSION_CHANGE, WM_XBUTTONDOWN, WM_XBUTTONUP, WNDCLASSW,
+        WTS_SESSION_LOCK, WTS_SESSION_UNLOCK,
     };
 
     use super::{Button, Input};
@@ -43,6 +51,37 @@ mod imp {
     fn send(input: Input) {
         if let Some(sink) = SINK.get() {
             let _ = sink.send(input);
+        }
+    }
+
+    unsafe extern "system" fn session_proc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
+        if message == WM_WTSSESSION_CHANGE && matches!(wparam.0 as u32, WTS_SESSION_LOCK | WTS_SESSION_UNLOCK) {
+            send(Input::ReleaseKeys);
+            return LRESULT(0);
+        }
+        unsafe { DefWindowProcW(hwnd, message, wparam, lparam) }
+    }
+
+    fn session_window(instance: Option<HINSTANCE>) -> windows::core::Result<HWND> {
+        unsafe {
+            let class = WNDCLASSW {
+                lpfnWndProc: Some(session_proc),
+                hInstance: instance.unwrap_or_default(),
+                lpszClassName: w!("KeyCatInputSession"),
+                ..Default::default()
+            };
+            if RegisterClassW(&class) == 0 {
+                return Err(windows::core::Error::from_thread());
+            }
+            let window = CreateWindowExW(
+                Default::default(), class.lpszClassName, w!(""), Default::default(),
+                0, 0, 0, 0, Some(HWND_MESSAGE), None, instance, None,
+            )?;
+            if let Err(error) = WTSRegisterSessionNotification(window, NOTIFY_FOR_THIS_SESSION) {
+                let _ = DestroyWindow(window);
+                return Err(error);
+            }
+            Ok(window)
         }
     }
 
@@ -104,15 +143,48 @@ mod imp {
                     let _ = ready.send(Err(error.to_string()));
                     return;
                 }
+                let window = match session_window(module) {
+                    Ok(window) => window,
+                    Err(error) => {
+                        let _ = ready.send(Err(format!("session notifications: {error}")));
+                        return;
+                    }
+                };
                 let _ = ready.send(Ok(()));
                 // Hooks are called through this thread's message queue.
                 let mut msg = MSG::default();
                 while GetMessageW(&mut msg, None, 0, 0).as_bool() {
                     DispatchMessageW(&msg);
                 }
+                let _ = WTSUnRegisterSessionNotification(window);
+                let _ = DestroyWindow(window);
             })
             .map_err(|error| error.to_string())?;
         started.recv().map_err(|error| error.to_string())?
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        use windows::Win32::UI::WindowsAndMessaging::{SendMessageW, WTS_SESSION_LOGON};
+
+        #[test]
+        fn lock_and_unlock_release_keys() {
+            let (sink, inputs) = mpsc::channel();
+            assert!(SINK.set(sink).is_ok());
+            let instance = unsafe { GetModuleHandleW(None).unwrap() };
+            let window = session_window(Some(HINSTANCE(instance.0))).unwrap();
+            unsafe {
+                SendMessageW(window, WM_WTSSESSION_CHANGE, Some(WPARAM(WTS_SESSION_LOGON as usize)), Some(LPARAM(0)));
+                assert!(inputs.try_recv().is_err());
+                for event in [WTS_SESSION_LOCK, WTS_SESSION_UNLOCK] {
+                    SendMessageW(window, WM_WTSSESSION_CHANGE, Some(WPARAM(event as usize)), Some(LPARAM(0)));
+                    assert!(matches!(inputs.try_recv(), Ok(Input::ReleaseKeys)));
+                }
+                WTSUnRegisterSessionNotification(window).unwrap();
+                DestroyWindow(window).unwrap();
+            }
+        }
     }
 }
 

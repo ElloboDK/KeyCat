@@ -543,6 +543,11 @@
 
   window.cat = {
     key(code, down) { key(code, down); },
+    releaseKeys() {
+      keyboard.releaseAll();
+      for (const p of Object.values(paws)) p.down = false;
+      tailTap.down = false;
+    },
     mouseMove(dx, dy) {
       const t = now();
       if (Math.abs(dx) + Math.abs(dy) < 0.5) return;
