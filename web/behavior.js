@@ -388,8 +388,7 @@
     P.ears.step(0.1 * S.excite * (1 - cross) + 0.12 * curious - 0.22 * S.rub - 0.55 * cross, dt);
     for (const e of cat.ears) {
       const flick = act && act.kind === 'ear' && e.s === act.side ? Math.sin(actU * Math.PI * 3) * 0.3 * (1 - actU) : 0;
-      e.group.rotation.z = -e.s * (e.tilt - P.ears.x) + flick;
-      e.group.rotation.x = -0.12 - 0.35 * cross + 0.12 * curious;
+      cat.turnEar(e, -e.s * (e.tilt - P.ears.x) + flick, -0.12 - 0.35 * cross + 0.12 * curious);
     }
 
     // Eyes: pupils lead; blink, slow-blink when relaxed, squint when petted, close when asleep.

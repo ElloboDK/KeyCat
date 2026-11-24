@@ -228,45 +228,110 @@
   chinLine.scale.copy(R);
   head.add(headRim, chinLine, headMesh);
 
-  // Ears: rounded triangles whose bases flare into the head, so the outline curves smoothly from
-  // head to ear instead of meeting it at a notch. The outline is the same shape grown evenly.
-  const earPts = [[0.28, -0.06], [0.255, 0.02], [0.225, 0.1], [0.185, 0.19], [0.135, 0.27], [0.08, 0.33], [0.035, 0.36], [0, 0.37]];
-  const earLathe = grow => {
-    const pts = earPts.map(([r, y], i) => new THREE.Vector2(r + grow, y + grow * (i / (earPts.length - 1)) ** 2));
-    pts.unshift(new THREE.Vector2(0, -0.06));
-    return new THREE.LatheGeometry(new THREE.SplineCurve(pts).getSpacedPoints(30), 40);
-  };
-  const earShape = [earLathe(0), earLathe(0.026)];
-  // Bigger ears (the Devon's) grow taller and broader above the base, but the base keeps its
-  // size, so it stays sunk inside the head instead of bulging out past the cheek. The markings
-  // read the unscaled shape (`rest`), so the inner ear grows with the ear.
-  const earGeos = {};
-  const earGeo = k => earGeos[k] || (earGeos[k] = earShape.map(base => {
-    const g = base.clone(), pos = g.attributes.position;
-    g.setAttribute('rest', pos.clone());
-    for (let i = 0; i < pos.count; i++) {
-      const w = 1 + (k - 1) * smooth(-0.06, 0.2, pos.getY(i));
-      pos.setXYZ(i, pos.getX(i) * w, -0.06 + (pos.getY(i) + 0.06) * (1 + 0.6 * (k - 1)), pos.getZ(i) * w);
+  // Ears: rounded triangles that grow out of the head. Where the outer edge reaches the cheek it
+  // bends round to follow the head's outline just inside it, so the two meet in one smooth curve
+  // instead of a kink, and below that the base rounds off out of sight inside the head. The
+  // outline is the same shape grown evenly.
+  // Bigger ears (the Devon's, `k` > 1) grow taller and broader above the base and lean further
+  // out (`earTilt`); the fillet is worked out for each, against the head as that ear sees it.
+  const EAR_AT = V(0.26, 0.21, -0.06), EAR_STRETCH = 1.12;
+  const earTilt = k => 0.2 + 0.5 * (k - 1);
+  const earTop = [[0.225, 0.1], [0.185, 0.19], [0.135, 0.27], [0.08, 0.33], [0.035, 0.36], [0, 0.37]];
+  // The head's outer outline (see headGeo, `grow` for its rim) in the right ear's own frame, as
+  // radius for height.
+  const headInEar = (k, grow) => {
+    const t = earTilt(k), c = Math.cos(t), sn = Math.sin(t), out = [];
+    for (let i = 0; i <= 200; i++) {
+      const y = -0.6 + 1.6 * i / 200;
+      const cheek = 1 + 0.08 * Math.exp(-(((y + 0.38) / 0.4) ** 2)) - 0.08 * (y + 0.2);
+      const dx = (R.x + grow) * cheek * Math.sqrt(Math.max(0, 1 - y * y)) - EAR_AT.x;
+      const dy = (R.y + grow) * (y > 0 ? y * (1 - 0.06 * y) : y * 0.96) - EAR_AT.y;
+      out.push([c * dx - sn * dy, (sn * dx + c * dy) / EAR_STRETCH]);
     }
-    g.computeVertexNormals();
+    return y => {
+      for (let i = 1; i < out.length; i++) {
+        const [r0, y0] = out[i - 1], [r1, y1] = out[i];
+        if ((y0 - y) * (y1 - y) <= 0 && y0 !== y1) return r0 + (r1 - r0) * (y - y0) / (y1 - y0);
+      }
+      return 0;
+    };
+  };
+  const smax = (a, b, k) => { const h = K.clamp(0.5 + 0.5 * (a - b) / k, 0, 1); return mix(b, a, h) + k * h * (1 - h); };
+  // The profile, bottom to top, for the ear (`grow` 0) or its outline: the outer edge carried on
+  // straight down from the ear, merged with the head's outline in a rounded fillet and then kept
+  // inside it, down to a rounded-off bottom. `meet` is just below where the edge reaches the head.
+  const earProfile = (k, grow) => {
+    const big = ([r, y]) => [r * (1 + (k - 1) * smooth(-0.06, 0.2, y)), -0.06 + (y + 0.06) * (1 + 0.6 * (k - 1))];
+    const n = earTop.length - 1;
+    const top = earTop.map(big).map(([r, y], i) => [r && r + grow, y + grow * (i / n) ** 2]);
+    const head = headInEar(k, grow && 0.024);
+    const [[ra, ya], [rb, yb]] = top, edge = y => ra + (rb - ra) * (y - ya) / (yb - ya);
+    // Just inside the head where the two meet, then well inside it further down, so the base
+    // stays hidden as the ear turns and the head moves, and turns into the rounded bottom out of
+    // sight.
+    let meet = ya;
+    while (meet > -0.2 && edge(meet) > head(meet)) meet -= 0.002;
+    const side = y => smax(edge(y), head(y) - 0.006 - 0.07 * smooth(meet - 0.01, meet - 0.13, y), 0.03);
+    const pts = [[0, -0.25], [0.2, -0.24]];
+    for (let i = 0; i < 16; i++) {
+      const y = -0.2 + (ya + 0.2) * i / 16;
+      pts.push([side(y), y]);
+    }
+    return { pts: pts.concat(top), meet: [side(meet - 0.03), meet - 0.03], join: meet };
+  };
+  // The markings read the unscaled shape (`rest`), so the inner ear grows with the ear. Sampled
+  // by curve parameter, so each vertex of a big ear lines up with the same one of the plain ear.
+  // Below the join the base thins front to back, so that turning the head does not swing its
+  // front or back out past the side of the head.
+  const earLathe = ({ pts, join }) => {
+    const g = new THREE.LatheGeometry(new THREE.SplineCurve(pts.map(([r, y]) => new THREE.Vector2(r, y))).getPoints(48), 40);
+    const pos = g.attributes.position;
+    for (let i = 0; i < pos.count; i++) pos.setZ(i, pos.getZ(i) * mix(1, 0.3, smooth(join, join - 0.1, pos.getY(i))));
     return g;
-  }));
+  };
+  const earGeos = {};
+  const earGeo = k => earGeos[k] || (earGeos[k] = (() => {
+    const geos = [0, 0.026].map(grow => {
+      const g = earLathe(earProfile(k, grow));
+      g.setAttribute('rest', earLathe(earProfile(1, grow)).attributes.position);
+      g.computeVertexNormals();
+      return g;
+    });
+    return { geos, meet: earProfile(k, 0).meet };
+  })());
+  // Turns an ear: `z` leans it out, `x` tips it back. Leaning out, it turns about the middle of
+  // its base, so the part under the cheek swings in. Standing up, about a point just below where
+  // its outer edge meets the head, so the join moves in a touch rather than out; the base below
+  // swings out a little, but sits far enough inside the head not to show.
+  const earRest = new THREE.Euler(), earPivot = V(), earHeld = V();
+  const turnEar = (ear, z, x) => {
+    ear.group.rotation.set(x, 0, z);
+    earPivot.copy(ear.meet).multiplyScalar(smooth(0, 0.1, ear.tilt + ear.s * z)).multiply(ear.group.scale);
+    earHeld.copy(earPivot).applyEuler(earRest.set(-0.12, 0, -ear.s * ear.tilt));
+    ear.group.position.set(ear.s * EAR_AT.x, EAR_AT.y, EAR_AT.z).add(earHeld).sub(earPivot.applyEuler(ear.group.rotation));
+  };
+  const placeEar = (ear, k) => {
+    const { geos: [geo, rimGeo], meet } = earGeo(k);
+    ear.mesh.geometry = geo;
+    ear.rim.geometry = rimGeo;
+    ear.tilt = earTilt(k);
+    ear.meet = V(ear.s * meet[0], meet[1], 0);
+    turnEar(ear, -ear.s * ear.tilt, -0.12);
+  };
   const ears = [-1, 1].map(s => {
     const g = new THREE.Group();
-    // Sunk deep enough that the flared base stays inside the head's outline.
-    g.position.set(s * 0.26, 0.21, -0.06);
-    g.rotation.set(-0.12, 0, -s * 0.2);
-    g.scale.set(1, 1.12, 1);
-    const [geo, rimGeo] = earGeo(1);
-    const e = new THREE.Mesh(geo, fur.ears[s < 0 ? 0 : 1]);
+    g.scale.set(1, EAR_STRETCH, 1);
+    const e = new THREE.Mesh(undefined, fur.ears[s < 0 ? 0 : 1]);
     e.scale.set(1, 1, 0.5);
-    const r = new THREE.Mesh(rimGeo, rimMat);
+    const r = new THREE.Mesh(undefined, rimMat);
     r.scale.set(1, 1, 0.5 + 0.06);
     r.renderOrder = -1;
     g.add(r, e);
     head.add(g);
     // `tilt`: how far the ear leans out at rest; the behaviour adds its swivel to it.
-    return { group: g, mesh: e, rim: r, s, tilt: 0.2 };
+    const ear = { group: g, mesh: e, rim: r, s, tilt: 0.2, meet: V() };
+    placeEar(ear, 1);
+    return ear;
   });
 
   // Eyes sit on the face surface and face along its normal.
@@ -499,13 +564,8 @@
     const striped = c.tabby && (look.pattern === 'tabby' || (look.pattern === 'auto' && c.striped));
     const solid = look.style === '3d';
     K.setFur({ ...c, dark: c.tabby || c.wave || c.fur, stripes: striped ? 1 : 0, shade: solid ? c.shade : 0 });
-    const [geo, rimGeo] = earGeo(c.ears || 1);
-    for (const e of ears) {
-      e.mesh.geometry = geo;
-      e.rim.geometry = rimGeo;
-      // Big ears lean further out, set low and wide on the head as a Devon's are.
-      e.tilt = 0.2 + 0.5 * ((c.ears || 1) - 1);
-    }
+    // Big ears lean further out, set low and wide on the head as a Devon's are.
+    for (const e of ears) placeEar(e, c.ears || 1);
     K.mouseProp.setStyle(look.style);
     chinLine.visible = !solid;
     chinMat.uniforms.uColor.value.set(c.ink || c.arm);
@@ -548,7 +608,7 @@
     tailTip: out => tailCurve.getPoint(1, out),
     petMeshes: [headMesh, ...ears.map(e => e.mesh)],
     dragMeshes: [bodyMesh, tail.body, ...arms.flatMap(a => [a.limb.body, a.paw]), ...hind],
-    updateArm, updateTail, setLook, look,
+    updateArm, updateTail, turnEar, setLook, look,
   };
   setLook({});
 })();
