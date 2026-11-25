@@ -1,0 +1,37 @@
+docs/release.md
+  s_41322278850ab3::t_b253596b3cbbdf 3-13,36-37,51-52,54,58,64,66-70,72-75,77,79,81,83-86,91-93,95-104
+  s_41322278850ab3::t_2ce18e4c7ebd9c 1-2,14-35,38-50,53,55-57,59-63,65,71,76,78,80,82,87-90,94,105-112
+docs/README.md
+  s_41322278850ab3::t_b253596b3cbbdf 23
+  s_41322278850ab3::t_2ce18e4c7ebd9c 1-22,24-65
+docs/architecture.md
+  s_41322278850ab3::t_8811ed77bb9472 25
+  s_41322278850ab3::t_2ce18e4c7ebd9c 1-24,26-124
+docs/web.md
+  s_41322278850ab3::t_2ce18e4c7ebd9c 1-96
+docs/hosts.md
+  s_41322278850ab3::t_2ce18e4c7ebd9c 1-90
+docs/dev.md
+  s_41322278850ab3::t_8811ed77bb9472 50
+  s_41322278850ab3::t_2ce18e4c7ebd9c 1-49,51-71
+README.md
+  s_41322278850ab3::t_9deb531ea00306 82
+CLAUDE.md
+  s_41322278850ab3::t_9deb531ea00306 1-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "d0fefc945345f537f55e3dc638c0ecb6a272ed19",
+  "prompts": {},
+  "sessions": {
+    "s_41322278850ab3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "85087d05-3cc7-4a52-9878-5d05309bd2d6",
+        "model": "unknown"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
