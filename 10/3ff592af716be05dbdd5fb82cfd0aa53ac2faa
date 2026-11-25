@@ -1,0 +1,29 @@
+.gitignore
+  s_1abeeacef77a9b::t_d9e4eddc2a769c 24
+.github/workflows/pages.yml
+  s_1abeeacef77a9b::t_58244fa1ad3dbe 7
+.github/workflows/cla.yml
+  s_1abeeacef77a9b::t_58d0db6a9926b5 7
+CONTRIBUTING.md
+  s_1abeeacef77a9b::t_cd1c37953ff179 10,50
+CLA.md
+  s_1abeeacef77a9b::t_58d0db6a9926b5 3,16
+.github/workflows/build.yml
+  s_1abeeacef77a9b::t_27fffd9ba46eac 6-7,15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "103ff592af716be05dbdd5fb82cfd0aa53ac2faa",
+  "prompts": {},
+  "sessions": {
+    "s_1abeeacef77a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4c4bafb8-f425-4826-83f9-c45f8a6ab67f",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
