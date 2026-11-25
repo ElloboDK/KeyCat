@@ -1,0 +1,21 @@
+tools/package.sh
+  s_9d3fe4cf8fbd93::t_30f7862f7869df 2-3,12-13
+README.md
+  s_9d3fe4cf8fbd93::t_309aad0da62c11 91
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "c46c662923b2289d25aabe8eb6a898f2cdbbc864",
+  "prompts": {},
+  "sessions": {
+    "s_9d3fe4cf8fbd93": {
+      "agent_id": {
+        "tool": "chengxiaobang",
+        "id": "s_wfb36ojw1r60",
+        "model": "auto(free)"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}

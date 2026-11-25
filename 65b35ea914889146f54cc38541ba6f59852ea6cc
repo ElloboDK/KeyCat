@@ -1,0 +1,29 @@
+README.md
+  s_743b28fe672ea0::t_10dc91894166be 161
+  s_743b28fe672ea0::t_55404e62b4d6aa 83,88-100
+  s_743b28fe672ea0::t_5c444ea2090c3f 55
+  s_743b28fe672ea0::t_3945c939681bc0 110,114
+  s_743b28fe672ea0::t_17fb569d673ef0 25
+  s_743b28fe672ea0::t_ebdefe3430ffd2 17-18
+tools/package.sh
+  s_743b28fe672ea0::t_acbb31a05d02a1 2-3,11-13
+win/package.json
+  s_743b28fe672ea0::t_7ecc284118471b 69
+  s_743b28fe672ea0::t_238c3be3e4c9f8 59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "65b35ea914889146f54cc38541ba6f59852ea6cc",
+  "prompts": {},
+  "sessions": {
+    "s_743b28fe672ea0": {
+      "agent_id": {
+        "tool": "chengxiaobang",
+        "id": "s_a5a2oraw13g7",
+        "model": "kr-claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}

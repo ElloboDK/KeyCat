@@ -1,0 +1,35 @@
+mac/AppMenu.swift
+  s_bf8a86458e70e3::t_e1930596e97943 86-87,91-110,166-168
+win/package-lock.json
+  s_bf8a86458e70e3::t_46e82b5eb3b2fc 3,9
+mac/package.sh
+  s_bf8a86458e70e3::t_ea8f7d3bc7e857 2-4,15-26
+README.md
+  s_bf8a86458e70e3::t_fb15e04db92f09 3,28
+  s_bf8a86458e70e3::t_4527dcbc1e104b 16,35,42,48
+mac/Info.plist
+  s_bf8a86458e70e3::t_70f1f37ecc686e 16,18
+mac/App.swift
+  s_bf8a86458e70e3::t_e1930596e97943 28,112-116
+win/package.json
+  s_bf8a86458e70e3::t_70f1f37ecc686e 3
+mac/Updater.swift
+  s_bf8a86458e70e3::t_3d1e3545d59a37 1-130,133-134,137-165
+  s_bf8a86458e70e3::t_784edf605e4b80 131-132,135-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "bf3020e9c2330f3e6994456a4c571f1adfde186b",
+  "prompts": {},
+  "sessions": {
+    "s_bf8a86458e70e3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8fd35167-4e9d-4e11-8659-763f02fd6c28",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
