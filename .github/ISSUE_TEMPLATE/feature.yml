@@ -1,0 +1,29 @@
+name: 功能
+description: 新功能或对现有功能的改动
+labels: [feature]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 目标
+      description: 用户能看到或感受到什么变化，为什么要做。
+    validations:
+      required: true
+  - type: textarea
+    id: protocol
+    attributes:
+      label: 协议和设置变化
+      description: 新增或改动的 window.cat 调用、网页 ↔ 外壳消息、cat.options 字段、设置键名和默认值、记忆字段。没有就写「无」。
+  - type: textarea
+    id: changes
+    attributes:
+      label: 各端改动
+      value: |
+        - web/：
+        - mac/：
+        - win/：
+  - type: textarea
+    id: verify
+    attributes:
+      label: 验证方式
+      description: 怎么确认做对了，比如 cat.test 名字、mac 检查模式、Windows CI 构建。
