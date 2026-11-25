@@ -1,0 +1,262 @@
+name: Build
+
+# Builds both apps and publishes releases, so nothing depends on one person's machine.
+#
+# - Pull requests build what they touch (mac/ → macOS, win/ → Windows, web/ → both), unsigned,
+#   as a check. The Pro repo pays for Actions minutes and macOS ones cost the most, hence the
+#   path test instead of building everything every time.
+# - Manual runs build both. On main they are signed with the release identities, without
+#   publishing: a dry run of a release whose artifacts can be downloaded from the run. On any
+#   other branch they are unsigned checks.
+# - A vX.Y.Z tag builds each platform whose version is X.Y.Z (mac/Info.plist
+#   CFBundleShortVersionString, win/package.json version), signed, and in ElloboDK/KeyCat,
+#   where installed copies download updates from, publishes one release. A platform at another
+#   version keeps its files from the previous release, so a Windows-only fix still leaves the
+#   mac download and update manifest in place. The Pro repo merges this file from there; its
+#   tags build but publish nothing.
+#
+# Signed jobs run in the release environment, whose secrets hold the signing identities and
+# which only main and v* tags may use. Pull requests from forks never get secrets.
+on:
+  pull_request:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+# Read-only: the builds run npm, cargo and swiftc on code from pull requests. Only the publish
+# job, which runs nothing but gh, writes, to create the release.
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      mac: ${{ steps.plan.outputs.mac }}
+      windows: ${{ steps.plan.outputs.windows }}
+      signed: ${{ steps.plan.outputs.signed }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          mac_version="$(python3 -c 'import plistlib; print(plistlib.load(open("mac/Info.plist", "rb"))["CFBundleShortVersionString"])')"
+          win_version="$(jq -r .version win/package.json)"
+          echo "mac $mac_version, windows $win_version"
+          case "$GITHUB_EVENT_NAME" in
+            push)
+              version="${GITHUB_REF_NAME#v}"
+              mac=false; windows=false
+              [ "$mac_version" = "$version" ] && mac=true
+              [ "$win_version" = "$version" ] && windows=true
+              if [ $mac = false ] && [ $windows = false ]; then
+                echo "tag $GITHUB_REF_NAME matches neither mac/Info.plist ($mac_version) nor win/package.json ($win_version)" >&2
+                exit 1
+              fi
+              signed=true ;;
+            pull_request)
+              changed="$(gh api "repos/$GITHUB_REPOSITORY/compare/$BASE...$HEAD" --paginate --jq '.files[].filename')"
+              grep -qE '^(mac|web)/|^\.github/workflows/build\.yml$' <<<"$changed" && mac=true || mac=false
+              grep -qE '^(win|web)/|^\.github/workflows/build\.yml$' <<<"$changed" && windows=true || windows=false
+              signed=false ;;
+            *)
+              mac=true; windows=true
+              [ "$GITHUB_REF" = refs/heads/main ] && signed=true || signed=false ;;
+          esac
+          echo "mac=$mac windows=$windows signed=$signed"
+          { echo "mac=$mac"; echo "windows=$windows"; echo "signed=$signed"; } >> "$GITHUB_OUTPUT"
+
+  mac:
+    needs: plan
+    if: needs.plan.outputs.mac == 'true'
+    runs-on: macos-latest
+    environment: ${{ needs.plan.outputs.signed == 'true' && 'release' || '' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      # mac/sign.sh signs with the identity in signing/ and creates a new one when there is none.
+      # That is right for checks, but a release signed by any other certificate is rejected by
+      # every installed copy's updater, so signed builds must restore the real one or stop.
+      - name: Restore the signing identity
+        if: needs.plan.outputs.signed == 'true'
+        env:
+          KEYCHAIN: ${{ secrets.MAC_SIGNING_KEYCHAIN }}
+          PASSWORD: ${{ secrets.MAC_SIGNING_PASSWORD }}
+          CERT: ${{ secrets.MAC_SIGNING_CERT }}
+        run: |
+          if [ -z "$KEYCHAIN" ] || [ -z "$PASSWORD" ] || [ -z "$CERT" ]; then
+            echo "MAC_SIGNING_KEYCHAIN, MAC_SIGNING_PASSWORD and MAC_SIGNING_CERT are required for a signed build" >&2
+            exit 1
+          fi
+          mkdir -p signing
+          base64 --decode <<<"$KEYCHAIN" > signing/KeyCat.keychain-db
+          printf '%s' "$PASSWORD" > signing/password
+          printf '%s\n' "$CERT" > signing/cert.pem
+
+      - name: Build
+        run: |
+          if [ "${{ needs.plan.outputs.signed }}" = true ]; then
+            sh mac/package.sh
+          else
+            sh mac/build.sh
+          fi
+
+      - name: Check the signature
+        if: needs.plan.outputs.signed == 'true'
+        run: |
+          codesign --verify --strict build/KeyCat.app
+          want="$(openssl x509 -in signing/cert.pem -noout -fingerprint -sha1 | sed 's/.*=//; s/://g' | tr 'A-F' 'a-f')"
+          codesign -d -r- build/KeyCat.app 2>&1 | tee /dev/stderr | grep -q "certificate leaf = H\"$want\""
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: needs.plan.outputs.signed == 'true'
+        with:
+          name: keycat-mac
+          path: |
+            dist/KeyCat-macOS.zip
+            dist/KeyCat-macOS.zip.sha256
+            dist/latest-mac.json
+          if-no-files-found: error
+
+  windows:
+    needs: plan
+    if: needs.plan.outputs.windows == 'true'
+    runs-on: windows-latest
+    environment: ${{ needs.plan.outputs.signed == 'true' && 'release' || '' }}
+    defaults:
+      run:
+        working-directory: win
+        shell: bash
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: win/package-lock.json
+
+      - uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
+        with:
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: win
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Checks build unsigned, without the updater files; signed builds need the updater key,
+      # which only exists as a secret.
+      - name: Build installer
+        env:
+          SIGNED: ${{ needs.plan.outputs.signed }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ needs.plan.outputs.signed == 'true' && secrets.TAURI_SIGNING_PRIVATE_KEY || '' }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ needs.plan.outputs.signed == 'true' && secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD || '' }}
+        run: |
+          if [ "$SIGNED" = true ]; then
+            if [ -z "$TAURI_SIGNING_PRIVATE_KEY" ]; then
+              echo "TAURI_SIGNING_PRIVATE_KEY is required for a signed build" >&2
+              exit 1
+            fi
+            npm run dist
+          else
+            npm run dist -- --config '{"bundle":{"createUpdaterArtifacts":false}}'
+          fi
+
+      - name: Collect release files
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          mkdir -p out
+          cp target/release/bundle/nsis/KeyCat_"$version"_x64-setup.exe out/KeyCat-Windows-Setup.exe
+          ls -l out
+          [ -f target/release/bundle/nsis/KeyCat_"$version"_x64-setup.exe.sig ] || exit 0
+          url="https://github.com/ElloboDK/KeyCat/releases/download/v$version/KeyCat-Windows-Setup.exe"
+          date="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          VERSION="$version" URL="$url" DATE="$date" \
+          SIG="$(cat target/release/bundle/nsis/KeyCat_"$version"_x64-setup.exe.sig)" \
+          node -e '
+            const fs = require("fs");
+            const { VERSION, URL, DATE, SIG } = process.env;
+            fs.writeFileSync("out/latest.json", JSON.stringify({
+              version: VERSION,
+              pub_date: DATE,
+              platforms: { "windows-x86_64": { signature: SIG, url: URL } },
+            }, null, 2));
+            const exe = fs.readFileSync("out/KeyCat-Windows-Setup.exe");
+            const sha512 = require("crypto").createHash("sha512").update(exe).digest("base64");
+            fs.writeFileSync("out/latest.yml", [
+              `version: ${VERSION}`,
+              "files:",
+              "  - url: KeyCat-Windows-Setup.exe",
+              `    sha512: ${sha512}`,
+              `    size: ${exe.length}`,
+              "path: KeyCat-Windows-Setup.exe",
+              `sha512: ${sha512}`,
+              `releaseDate: '\''${DATE}'\''`,
+              "",
+            ].join("\n"));
+          '
+          cat out/latest.json out/latest.yml
+
+      # Unsigned check builds are uploaded too, so a pull request's installer can be tried out.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: keycat-windows
+          path: win/out/*
+          if-no-files-found: error
+
+  publish:
+    needs: [plan, mac, windows]
+    # Runs when the platforms the tag needs have built; the other one is skipped, not failed.
+    if: github.repository == 'ElloboDK/KeyCat' && startsWith(github.ref, 'refs/tags/v') && !failure() && !cancelled()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_REPO: ${{ github.repository }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        if: needs.plan.outputs.mac == 'true'
+        with:
+          name: keycat-mac
+          path: out
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        if: needs.plan.outputs.windows == 'true'
+        with:
+          name: keycat-windows
+          path: out
+
+      - name: Publish release
+        env:
+          MAC: ${{ needs.plan.outputs.mac }}
+          WINDOWS: ${{ needs.plan.outputs.windows }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            # A re-run: replace what this run built, keep the rest.
+            gh release upload "$GITHUB_REF_NAME" out/* --clobber
+            exit 0
+          fi
+          previous="$(gh release view --json tagName --jq .tagName)"
+          echo "previous release $previous"
+          # The platform this tag does not build keeps its files from the previous release; its
+          # update manifest still points at that release's download, which stays where it is.
+          if [ "$MAC" != true ]; then
+            gh release download "$previous" -D out \
+              -p KeyCat-macOS.zip -p KeyCat-macOS.zip.sha256 -p latest-mac.json
+          fi
+          if [ "$WINDOWS" != true ]; then
+            gh release download "$previous" -D out \
+              -p KeyCat-Windows-Setup.exe -p latest.json -p latest.yml
+          fi
+          ls -l out
+          # Notes list the pull requests merged since the previous release.
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" \
+            --generate-notes --notes-start-tag "$previous" out/*

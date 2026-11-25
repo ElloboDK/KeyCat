@@ -1,0 +1,25 @@
+# Build output and release artifacts
+build/
+dist/
+
+# Local code-signing identity: private key plus its password. Never commit.
+signing/
+
+# Screenshots and reference material from the paid app this is modelled on
+snaps/
+ref/
+
+.DS_Store
+
+# Windows build (Tauri)
+win/node_modules/
+win/target/
+win/gen/
+win/out/
+
+# Download page build (tools/site/build.js)
+_site/
+tools/site/node_modules/
+
+# Free-edition worktrees inside the Pro clone
+.worktrees/
