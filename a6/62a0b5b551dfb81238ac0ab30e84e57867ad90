@@ -1,0 +1,23 @@
+tools/site/package-lock.json
+  s_41322278850ab3::t_b9b7a2b7f025ff 1-1593
+tools/site/build.js
+  s_41322278850ab3::t_aa76c6a558b81f 1-60
+tools/site/package.json
+  s_41322278850ab3::t_aa76c6a558b81f 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "a662a0b5b551dfb81238ac0ab30e84e57867ad90",
+  "prompts": {},
+  "sessions": {
+    "s_41322278850ab3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "85087d05-3cc7-4a52-9878-5d05309bd2d6",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
