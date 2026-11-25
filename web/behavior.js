@@ -1286,8 +1286,9 @@
     let blink = t > S.nextBlink ? Math.sin(clamp((t - S.nextBlink) / 0.15, 0, 1) * Math.PI) : 0;
     if (act && act.kind === 'slowBlink' && actU >= 0) blink = Math.max(blink, 0.85 * Math.sin(clamp(actU, 0, 1) * Math.PI));
     const closed = (pet && !S.cross) || S.sleep > 0.5 || yawnOpen > 0.45 || S.purr > 0.5 || !!(act && act.kind === 'groom' && actEnv > 0.5);
-    // Sleepy late at night and sulking, the lids hang heavy.
-    const lid = night ? 0.72 : sulking ? 0.6 : 1;
+    // Sulking, the lids hang heavy. Not when sleepy at night: that lasts for hours and squashed
+    // the eyes into ovals the whole evening; the yawns say it is sleepy.
+    const lid = sulking ? 0.6 : 1;
     // Excited and curious cats' pupils go wide and round (curious most of all, up to the size set
     // in the 调节 window); cross ones narrow to slits under heavy lids. The pupil never grows past
     // the iris, so it stays a black disc inside a coloured ring.
