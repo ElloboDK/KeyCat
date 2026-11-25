@@ -1,0 +1,26 @@
+.github/ISSUE_TEMPLATE/feature.yml
+  s_41322278850ab3::t_230fb1fa715878 1-30
+.github/pull_request_template.md
+  s_41322278850ab3::t_230fb1fa715878 1-9
+CONTRIBUTING.md
+  s_41322278850ab3::t_51bd6f2e3e84ba 33
+  s_41322278850ab3::t_164ab6af3ca73f 26-32,34-36
+CLAUDE.md
+  s_41322278850ab3::t_164ab6af3ca73f 54-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "dca598db2eba295feb543c76a1ff026b79ac15b3",
+  "prompts": {},
+  "sessions": {
+    "s_41322278850ab3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "85087d05-3cc7-4a52-9878-5d05309bd2d6",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
