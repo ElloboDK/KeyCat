@@ -76,6 +76,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         get { defaults.string(forKey: "collar") ?? "none" }
         set { defaults.set(newValue, forKey: "collar") }
     }
+    /// Colourpoint coats fade into their points, as in 1.0.4, instead of a crisp edge.
+    var softPoints: Bool {
+        get { defaults.bool(forKey: "softPoints") }
+        set { defaults.set(newValue, forKey: "softPoints") }
+    }
     var gloves: String {
         get { defaults.string(forKey: "gloves") ?? "auto" }
         set { defaults.set(newValue, forKey: "gloves") }
@@ -234,7 +239,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let role = secondCat && pairMode == "split" ? (cat.isMain ? "keys" : "mouse") : "both"
         return ["style": style, "coat": cat.isMain ? coat : coat2, "pattern": cat.isMain ? pattern : "auto",
                 "eye": eyeColor, "shine": eyeShine, "blush": blush, "whiskers": whiskers, "collar": collar,
-                "gloves": gloves, "cable": mouseCable, "board": keyboardColor, "opacity": opacity,
+                "softPoints": softPoints, "gloves": gloves, "cable": mouseCable, "board": keyboardColor, "opacity": opacity,
                 "privacy": privacy, "sleepAfter": sleepAfter > 0 ? sleepAfter : 1e9, "tune": tune,
                 "sound": sound, "festival": festival, "cup": cup, "pomodoro": cat.isMain && pomodoro,
                 "role": role, "persist": cat.isMain]

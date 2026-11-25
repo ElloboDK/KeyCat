@@ -9,6 +9,8 @@ final class MenuAction: NSObject {
 let coatOptions = [("黑猫", "black"), ("奶牛猫", "tuxedo"), ("橘猫", "orange"), ("蓝灰猫", "grey"),
                    ("白猫", "white"), ("三花猫", "calico"), ("暹罗猫", "siamese"), ("布偶猫", "ragdoll"),
                    ("德文卷毛猫", "devon"), ("美短银虎斑", "silver"), ("狸花猫", "lihua")]
+/// Coats with colourpoints (dark face, ears, legs and tail), which get the soft-points choice.
+let pointCoats: Set = ["siamese", "ragdoll"]
 
 extension AppDelegate {
     /// Resizes every cat; the second keeps its place next to the main one.
@@ -101,6 +103,10 @@ extension AppDelegate {
             let striped = pattern == "tabby" || (pattern == "auto" && coat == "orange")
             items.append(submenu("花纹", [("纯色", "solid"), ("虎斑条纹", "tabby")],
                                  selected: striped ? "tabby" : "solid") { $0.pattern = $1 })
+        }
+        // The second cat shares the look, so its coat counts too.
+        if pointCoats.contains(coat) || (secondCat && pointCoats.contains(coat2)) {
+            items.append(toggle("重点色柔和渐变", softPoints) { $0.softPoints.toggle() })
         }
         items += [
             submenu("大小", [("特小", 0.5), ("小", 0.7), ("中", 0.9), ("大", 1.1), ("特大", 1.35)] as [(String, CGFloat)],

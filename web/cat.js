@@ -519,8 +519,8 @@
   };
   const smax = (a, b, k) => { const h = K.clamp(0.5 + 0.5 * (a - b) / k, 0, 1); return mix(b, a, h) + k * h * (1 - h); };
   // The profile, bottom to top, for the ear (`grow` 0) or its outline: the outer edge carried on
-  // straight down from the ear, merged with the head's outline in a rounded fillet and then kept
-  // inside it, down to a rounded-off bottom. `meet` is just below where the edge reaches the head.
+  // straight down from the ear, merged with the head's outline in a rounded fillet, then drawn
+  // in away from it, down to a rounded-off bottom. `meet` is just below where the edge reaches the head.
   const earProfile = (k, grow) => {
     const big = ([r, y]) => [r * (1 + (k - 1) * smooth(-0.06, 0.2, y)), -0.06 + (y + 0.06) * (1 + 0.6 * (k - 1))];
     const n = earTop.length - 1;
@@ -529,10 +529,13 @@
     const [[ra, ya], [rb, yb]] = top, edge = y => ra + (rb - ra) * (y - ya) / (yb - ya);
     // Just inside the head where the two meet, then well inside it further down, so the base
     // stays hidden as the ear turns and the head moves, and turns into the rounded bottom out of
-    // sight.
+    // sight. Below the join the base leaves the edge line too: carried on down, that line flares
+    // out to near the side of the head at eye level, and there its corner with the bottom showed
+    // past the cheek whenever the head turned or tipped.
     let meet = ya;
     while (meet > -0.2 && edge(meet) > head(meet)) meet -= 0.002;
-    const side = y => smax(edge(y), head(y) - 0.006 - 0.07 * smooth(meet - 0.01, meet - 0.13, y), 0.03);
+    const fillet = y => smax(edge(y), head(y) - 0.006, 0.03);
+    const side = y => y > meet ? fillet(y) : mix(fillet(y), head(y) - 0.09, smooth(meet, meet - 0.12, y));
     const pts = [[0, -0.25], [0.2, -0.24]];
     for (let i = 0; i < 16; i++) {
       const y = -0.2 + (ya + 0.2) * i / 16;
@@ -1160,10 +1163,11 @@
   // style: '2d' is flat colour like a sticker; '3d' adds soft volume shading.
   // What the current coat brings beyond the materials: the resting cheek flush.
   const coat = { cheek: 0 };
+  // `softPoints`: colourpoint coats fade into their points instead of a crisp cut-paper edge.
   // `cable`, `board` and `opacity` are for the desk and the whole picture: the mouse cord, the
   // keyboard's colours, and how see-through everything is (so the text under it shows).
   const look = { style: '2d', coat: 'black', pattern: 'auto', eye: 'auto', shine: 'classic', blush: false, whiskers: true, collar: 'none',
-    cable: true, board: 'cream', opacity: 1, gloves: 'auto' };
+    softPoints: false, cable: true, board: 'cream', opacity: 1, gloves: 'auto' };
   // 手套颜色: the paws' colour and their toe creases. 'auto' is the coat's own (black paws on a
   // black cat, white socks on a tuxedo).
   const GLOVES = { white: { paw: '#f7f6f0', toe: '#b9b7ae' }, black: { paw: '#1d1d1c', toe: '#4a4a46' },
@@ -1174,7 +1178,7 @@
     const striped = c.tabby && (look.pattern === 'tabby' || (look.pattern === 'auto' && c.striped));
     const solid = look.style === '3d';
     coat.cheek = c.cheek || 0;
-    K.setFur({ ...c, dark: c.tabby || c.fur, stripes: striped ? 1 : 0, shade: solid ? c.shade : 0 });
+    K.setFur({ ...c, dark: c.tabby || c.fur, stripes: striped ? 1 : 0, softPoints: look.softPoints ? 1 : 0, shade: solid ? c.shade : 0 });
     // Big ears lean further out, set low and wide on the head as a Devon's are.
     for (const e of ears) placeEar(e, c.ears || 1);
     K.mouseProp.setStyle(look.style);

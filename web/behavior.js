@@ -1172,16 +1172,19 @@
     if (atKeys && lie > 0.6) for (const [c, dx] of chinAt.map((c, i) => [c, (i - 1) * 0.13])) weights.push(c.set(st.head.x + dx, 0, st.head.z - 0.08));
     keyboard.weigh(0, 0, weights);
 
-    // Gaze target: the key being pressed, else the pointer; the eyes get there first.
+    // Gaze target: the key pressed last, else the pointer; the eyes get there first. The key holds
+    // the gaze until the pointer moves: letting go of it does not send the eyes back to a pointer
+    // that has not moved since, or slow typing would swing the head between the two.
     const headScreen = hs;
     let focus = null;
-    const typing = Object.values(paws).find(p => p.key && p.down);
+    const lastPaw = paws[S.lastPaw];
+    const typing = lastPaw.key && (lastPaw.down || S.lastKey > S.cursorSeen) && t - S.lastKey < 5 ? lastPaw : null;
     // 盯着键盘: down on its elbows at the keyboard, it watches the keys.
     const staring = !!(S.lying && !S.lying.up && S.lieAt === 'board' && !S.lying.calm && melt < 0.5);
     if (staring) focus = screen(tmp2.set(0.1, 0.24, 1.05), V());
     else if (push && ['notice', 'reach', 'hover', 'tap', 'shove'].includes(push.b.kind)) focus = screen(cup.group.position, V());
     else if (push && push.b.kind === 'watch') focus = screen(S.cupFall ? cup.group.position : tmp2.copy(cup.group.position).setY(-0.6), V());
-    else if (typing && t - S.lastKey < 0.6) focus = screen(keyboard.keyTop(typing.key, tmp2), V());
+    else if (typing) focus = screen(keyboard.keyTop(typing.key, tmp2), V());
     else if (tailTap.key && t - tailTap.t0 < 0.6) focus = screen(tailTap.tip, V());
     else if (S.friend && friendNear && t - S.cursorSeen > 4 && !S.nag) focus = V(S.friend.x, S.friend.y, 0);
     else if (S.cursor) focus = V(S.cursor.x, S.cursor.y, 0);
