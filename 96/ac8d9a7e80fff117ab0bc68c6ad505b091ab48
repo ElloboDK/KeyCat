@@ -1,0 +1,29 @@
+docs/hosts.md
+  s_2df13b48789cb1::t_182e76652c15fc 77-80
+win/tauri.conf.json
+  s_2df13b48789cb1::t_d5338f241fbce2 24
+README.md
+  s_2df13b48789cb1::t_182e76652c15fc 22,36
+docs/release.md
+  s_2df13b48789cb1::t_182e76652c15fc 45
+win/src/main.rs
+  s_2df13b48789cb1::t_d5338f241fbce2 1409-1435,1449
+win/installer-hooks.nsh
+  s_2df13b48789cb1::t_d5338f241fbce2 3-13,55-57,108-116,129-130
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "96ac8d9a7e80fff117ab0bc68c6ad505b091ab48",
+  "prompts": {},
+  "sessions": {
+    "s_2df13b48789cb1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "32ffbad1-0f94-4c4f-900f-f72acc6f2217",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
