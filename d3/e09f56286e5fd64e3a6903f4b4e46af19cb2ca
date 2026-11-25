@@ -1,0 +1,25 @@
+docs/architecture.md
+  s_1abeeacef77a9b::t_ed7894ad31573b 83
+docs/hosts.md
+  s_1abeeacef77a9b::t_ed7894ad31573b 13,29,31
+docs/web.md
+  s_1abeeacef77a9b::t_ed7894ad31573b 38-39,72
+docs/release.md
+  s_1abeeacef77a9b::t_2c5bce09287c38 93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "d3e09f56286e5fd64e3a6903f4b4e46af19cb2ca",
+  "prompts": {},
+  "sessions": {
+    "s_1abeeacef77a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4c4bafb8-f425-4826-83f9-c45f8a6ab67f",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
