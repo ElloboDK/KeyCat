@@ -12,8 +12,9 @@ pub enum Button {
 
 pub enum Input {
     /// `id` names the physical key (scan code, plus 0x100 for E0 keys) so autorepeat can be
-    /// told apart from a new press; `code` is `None` for keys the scene has no name for.
-    Key { id: u32, code: Option<&'static str>, down: bool },
+    /// told apart from a new press; `vk` is its virtual key, for asking whether it is still down
+    /// (see `is_down`); `code` is `None` for keys the scene has no name for.
+    Key { id: u32, vk: u32, code: Option<&'static str>, down: bool },
     Button { button: Button, down: bool },
     /// Wheel notches, positive away from the user.
     Wheel(f64),
@@ -27,7 +28,7 @@ mod imp {
 
     use windows::Win32::Foundation::{HINSTANCE, LPARAM, LRESULT, WPARAM};
     use windows::Win32::System::LibraryLoader::GetModuleHandleW;
-    use windows::Win32::UI::Input::KeyboardAndMouse::{MapVirtualKeyW, MAPVK_VK_TO_VSC_EX};
+    use windows::Win32::UI::Input::KeyboardAndMouse::{GetAsyncKeyState, MapVirtualKeyW, MAPVK_VK_TO_VSC_EX};
     use windows::Win32::UI::WindowsAndMessaging::{
         CallNextHookEx, DispatchMessageW, GetMessageW, SetWindowsHookExW, HC_ACTION, KBDLLHOOKSTRUCT,
         LLKHF_EXTENDED, MSG, MSLLHOOKSTRUCT, WH_KEYBOARD_LL, WH_MOUSE_LL, WM_KEYDOWN, WM_LBUTTONDOWN,
@@ -60,6 +61,7 @@ mod imp {
             }
             send(Input::Key {
                 id: scan | if extended { 0x100 } else { 0 },
+                vk: info.vkCode,
                 code: keymap::code(scan, extended, info.vkCode),
                 down,
             });
@@ -89,6 +91,13 @@ mod imp {
             }
         }
         unsafe { CallNextHookEx(None, code, wparam, lparam) }
+    }
+
+    /// Whether the key is down right now. The hook runs before this state changes, so only ask
+    /// about a key some time after its press.
+    pub fn is_down(vk: u32) -> bool {
+        let state = unsafe { GetAsyncKeyState(vk as i32) };
+        state < 0
     }
 
     pub fn start(sink: Sender<Input>) -> Result<(), String> {
@@ -122,6 +131,10 @@ mod imp {
 
     use super::Input;
 
+    pub fn is_down(_vk: u32) -> bool {
+        true
+    }
+
     pub fn start(_sink: Sender<Input>) -> Result<(), String> {
         Err("global input is only implemented for Windows".into())
     }
@@ -129,4 +142,8 @@ mod imp {
 
 pub fn start(sink: Sender<Input>) -> Result<(), String> {
     imp::start(sink)
+}
+
+pub fn is_down(vk: u32) -> bool {
+    imp::is_down(vk)
 }

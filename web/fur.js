@@ -20,6 +20,7 @@
     uCalico: { value: 0 },
     uTuxedo: { value: 0 },
     uPoints: { value: 0 },
+    uSoftPoints: { value: 0 },  // 1: the colourpoints fade in gradually, as in 1.0.4
     uInnerAmt: { value: 0 },
     uShade: { value: 0 },
   };
@@ -47,7 +48,7 @@
 
   const fragment = `
     uniform vec3 uFur, uLight, uDark, uPatchA, uPatchB, uPoint, uInner;
-    uniform float uStripes, uMuzzle, uBib, uCalico, uTuxedo, uPoints, uInnerAmt, uShade;
+    uniform float uStripes, uMuzzle, uBib, uCalico, uTuxedo, uPoints, uSoftPoints, uInnerAmt, uShade;
     varying vec3 vRest;
     varying vec3 vNormal;
     varying float vAlong;
@@ -78,7 +79,9 @@
         if (p.z > 0.0) {
           vec2 q = p.xy;
           // Colourpoint mask: a crisp-edged oval over the nose and muzzle that reaches up under the eyes, like a cut-paper shape.
-          point = blob(q, vec2(0.0, -0.3), vec2(0.64, 0.54));
+          // Soft points: a wider oval over eyes, nose and muzzle that fades out towards the brow.
+          point = mix(blob(q, vec2(0.0, -0.3), vec2(0.64, 0.54)),
+                      1.0 - smoothstep(0.62, 1.0, length((q - vec2(0.0, -0.2)) / vec2(0.74, 0.74))), uSoftPoints);
           // Two lobes under the nose and a little chin: the classic pale cat muzzle.
           float m = max(max(blob(q, vec2(-0.2, -0.47), vec2(0.27, 0.22)), blob(q, vec2(0.2, -0.47), vec2(0.27, 0.22))),
                         blob(q, vec2(0.0, -0.66), vec2(0.26, 0.18)));
@@ -120,8 +123,9 @@
       #ifdef EAR
         // Ear lathe: radius shrinks from 0.28 at the base to 0 at the tip (y 0.37).
         // Every point lies on the lathe radius, so the inner ear is a band across the front face.
-        // The point colour starts a little above the base with a crisp edge, like the mask.
-        point = smoothstep(0.09, 0.1, p.y);
+        // The point colour starts a little above the base with a crisp edge, like the mask; soft
+        // points come in gradually, so the ear grows out of the head's colour.
+        point = mix(smoothstep(0.09, 0.1, p.y), smoothstep(0.06, 0.2, p.y), uSoftPoints);
         float rMax = mix(0.28, 0.0, clamp((p.y + 0.06) / 0.43, 0.0, 1.0));
         inner = (1.0 - smoothstep(0.52, 0.58, abs(p.x) / max(rMax, 0.001))) * smoothstep(0.13, 0.14, p.y) * (1.0 - smoothstep(0.3, 0.31, p.y)) * step(0.0, p.z);
         #ifdef LEFT
@@ -136,14 +140,15 @@
         dark = max(dark, rings(vAlong + 0.08, 3.5, 0.42) * step(0.3, vAlong) * uStripes);
         dark = max(dark, smoothstep(0.88, 0.89, vAlong) * uStripes);
         float pa = smoothstep(0.62, 0.63, vAlong), pb = smoothstep(0.32, 0.33, vAlong) * (1.0 - pa);
-        point = smoothstep(0.3, 0.31, vAlong);
+        point = mix(smoothstep(0.3, 0.31, vAlong), smoothstep(0.0, 0.3, vAlong), uSoftPoints);
       #endif
       #ifdef ARM
         // No stripes on the legs: at this size they read as rings round a tube.
         // Calico forelegs are white, as on most real calicos.
         float pa = 0.0, pb = 0.0;
-        // Points: dark boots from halfway down the leg, crisp at the top.
-        point = smoothstep(0.55, 0.56, vAlong);
+        // Points: dark boots from halfway down the leg, crisp at the top; soft points darken the
+        // leg gradually from the elbow down.
+        point = mix(smoothstep(0.55, 0.56, vAlong), smoothstep(0.3, 0.8, vAlong), uSoftPoints);
       #endif
       col = mix(col, uPatchA, pa * uCalico);
       col = mix(col, uPatchB, pb * uCalico);
@@ -182,6 +187,6 @@
   // Writes a coat: colours plus how strongly each marking shows (0 hides it).
   K.setFur = f => {
     for (const k of ['fur', 'light', 'dark', 'patchA', 'patchB', 'point', 'inner']) U['u' + k[0].toUpperCase() + k.slice(1)].value.set(f[k] || f.fur);
-    for (const k of ['stripes', 'muzzle', 'bib', 'calico', 'tuxedo', 'points', 'innerAmt', 'shade']) U['u' + k[0].toUpperCase() + k.slice(1)].value = f[k] || 0;
+    for (const k of ['stripes', 'muzzle', 'bib', 'calico', 'tuxedo', 'points', 'softPoints', 'innerAmt', 'shade']) U['u' + k[0].toUpperCase() + k.slice(1)].value = f[k] || 0;
   };
 })();

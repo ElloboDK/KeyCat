@@ -12,7 +12,7 @@ mod hook;
 mod keymap;
 mod store;
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::path::PathBuf;
@@ -109,7 +109,9 @@ struct Host {
     last_pointer: Option<(f64, f64)>,
     size_fixes: u32,
     key_events: u64,
-    held: HashSet<u32>,
+    /// Keys the page thinks are down, by hook `id` (see release_lost_keys).
+    held: HashMap<u32, Held>,
+    last_held_check: Instant,
     autostart: Mode,
     update: UpdateState,
     downloaded: Option<(Update, Vec<u8>)>,
@@ -130,6 +132,8 @@ struct Settings {
     gloves: String,
     blush: bool,
     whiskers: bool,
+    /// Colourpoint coats fade into their points, as in 1.0.4, instead of a crisp edge.
+    soft_points: bool,
     mouse_cable: bool,
     keyboard_color: String,
     /// How see-through the whole picture is, 1 solid.
@@ -169,6 +173,7 @@ impl Host {
             gloves: text("gloves", "auto"),
             blush: self.store.get("blush") == Some(&Value::Bool(true)),
             whiskers: self.store.get("whiskers") != Some(&Value::Bool(false)),
+            soft_points: self.store.get("softPoints") == Some(&Value::Bool(true)),
             mouse_cable: self.store.get("mouseCable") != Some(&Value::Bool(false)),
             keyboard_color: text("keyboardColor", "cream"),
             opacity: number("opacity").filter(|v| (0.3..=1.0).contains(v)).unwrap_or(1.0),
@@ -288,6 +293,7 @@ fn options(app: &AppHandle, label: &str) -> Value {
         "blush": s.blush,
         "whiskers": s.whiskers,
         "collar": s.collar,
+        "softPoints": s.soft_points,
         "gloves": s.gloves,
         "cable": s.mouse_cable,
         "board": s.keyboard_color,
@@ -488,6 +494,7 @@ fn tick(app: &AppHandle) {
     if !host(app).cats.get(PANEL).is_some_and(|cat| cat.page_ready) {
         return;
     }
+    release_lost_keys(app);
     let Ok(pointer) = app.cursor_position() else { return };
     let windows = panels(app);
     if let Some(drag) = host(app).drag.as_mut() {
@@ -653,14 +660,16 @@ fn panel_under_pointer(app: &AppHandle) -> Option<(&'static str, WebviewWindow, 
 
 fn on_input(app: &AppHandle, input: Input) {
     match input {
-        Input::Key { id, code, down } => {
+        Input::Key { id, vk, code, down } => {
             {
                 let mut h = host(app);
                 // Autorepeat: one paw press per physical press.
-                if down && !h.held.insert(id) {
-                    return;
-                }
-                if !down {
+                if down {
+                    if h.held.contains_key(&id) {
+                        return;
+                    }
+                    h.held.insert(id, Held { vk, code, since: Instant::now() });
+                } else {
                     h.held.remove(&id);
                 }
                 h.key_events += 1;
@@ -672,6 +681,38 @@ fn on_input(app: &AppHandle, input: Input) {
         Input::Button { button, down } => on_button(app, button, down),
         // Feed the wheel like a vertical mouse move, as the mac build does.
         Input::Wheel(notches) => host(app).pending_delta.1 += -notches * 0.4,
+    }
+}
+
+/// A key the hook saw go down and not yet up.
+struct Held {
+    vk: u32,
+    code: Option<&'static str>,
+    since: Instant,
+}
+
+/// The hook never sees some key-ups: Win+L takes the keyboard to the lock screen before L and
+/// Win come up, and a key let go over an administrator window is hidden from it. The key would
+/// then stay down on the page and its label hang over the keyboard until pressed again. So, as
+/// the mac build does, a key held for a while is checked against the keyboard itself twice a
+/// second, and let go if it is not actually down.
+fn release_lost_keys(app: &AppHandle) {
+    let lost: Vec<Option<&'static str>> = {
+        let mut h = host(app);
+        if h.last_held_check.elapsed() < Duration::from_millis(500) {
+            return;
+        }
+        h.last_held_check = Instant::now();
+        let ids: Vec<u32> = h
+            .held
+            .iter()
+            .filter(|(_, key)| key.since.elapsed() > Duration::from_millis(400) && !hook::is_down(key.vk))
+            .map(|(id, _)| *id)
+            .collect();
+        ids.iter().filter_map(|id| h.held.remove(id)).map(|key| key.code).collect()
+    };
+    for code in lost.into_iter().flatten() {
+        js(app, &format!("cat.key('{code}',false)"));
     }
 }
 
@@ -936,6 +977,11 @@ fn build_menu(app: &AppHandle) -> tauri::Result<Menu<Wry>> {
         let current = json!(if striped { "tabby" } else { "solid" });
         let options = [("纯色", json!("solid")), ("虎斑条纹", json!("tabby"))];
         look.push(submenu(app, "花纹", choice(app, &format!("pattern.{coat}"), &current, &options)?)?);
+    }
+    // Colourpoint coats get the soft-points choice; the second cat shares the look, so its coat counts too.
+    let points = |c: &str| c == "siamese" || c == "ragdoll";
+    if points(coat) || (s.second_cat && points(&s.coat2)) {
+        look.push(toggle(app, "重点色柔和渐变", "softPoints", s.soft_points)?);
     }
     let sizes = [("特小", 0.5), ("小", 0.7), ("中", 0.9), ("大", 1.1), ("特大", 1.35)]
         .iter()
@@ -1520,7 +1566,8 @@ fn setup(app: &AppHandle) -> tauri::Result<()> {
         last_pointer: None,
         size_fixes: 0,
         key_events: 0,
-        held: HashSet::new(),
+        held: HashMap::new(),
+        last_held_check: Instant::now(),
         autostart: if DEV { Mode::Off } else { autostart::current() },
         update: UpdateState::Idle,
         downloaded: None,
