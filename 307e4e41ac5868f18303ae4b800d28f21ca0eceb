@@ -1,0 +1,21 @@
+README.md
+  s_743b28fe672ea0::t_47117d07d0c342 86,88-100,102-104
+Info.plist
+  s_743b28fe672ea0::t_ee88af65710520 16,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "307e4e41ac5868f18303ae4b800d28f21ca0eceb",
+  "prompts": {},
+  "sessions": {
+    "s_743b28fe672ea0": {
+      "agent_id": {
+        "tool": "chengxiaobang",
+        "id": "s_a5a2oraw13g7",
+        "model": "kr-claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}

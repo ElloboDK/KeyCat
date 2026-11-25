@@ -1,0 +1,19 @@
+mac/Info.plist
+  s_d14c6ac966648a::t_2262fb9f65ddaf 5-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "20406d4d9e74588a9e75fb71116e5609ee84391c",
+  "prompts": {},
+  "sessions": {
+    "s_d14c6ac966648a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "82e458df-56be-4353-9c6a-4f641dd4b7ea",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}

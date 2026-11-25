@@ -1,0 +1,19 @@
+tools/gitee-release.sh
+  s_bf8a86458e70e3::t_eb292e269db68a 38-39,41-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "d1acb120af080c1d98f666b8c5379abef81cdbd5",
+  "prompts": {},
+  "sessions": {
+    "s_bf8a86458e70e3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8fd35167-4e9d-4e11-8659-763f02fd6c28",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
