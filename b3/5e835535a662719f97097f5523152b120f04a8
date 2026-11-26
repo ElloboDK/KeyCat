@@ -1,0 +1,43 @@
+web/fur.js
+  s_71dd1dbe33157f::t_704e271ba99c42 26-28,54,105-108,131,133,136-140,150,164-166,175,214
+mac/Custom.swift
+  s_71dd1dbe33157f::t_8904f1bbe08a46 1-87
+mac/AppMenu.swift
+  s_71dd1dbe33157f::t_78fe42490e37af 100,108,131-145,158
+mac/App.swift
+  s_71dd1dbe33157f::t_cced5862bbddbf 34,50-65,257-261
+web/custom.js
+  s_71dd1dbe33157f::t_332d64bf2e33d3 1-107
+web/cat.js
+  s_71dd1dbe33157f::t_5dc5cdc0b2d903 41-44,163,370,411,1114,1132,1137-1154,1157-1159,1165,1228
+  s_71dd1dbe33157f::t_b16513a9da761b 1182-1185
+win/src/main.rs
+  s_71dd1dbe33157f::t_4c3cbf47395156 46-49,161-171,292-293,295-305,314-315,830,903-947,1045-1063,1072-1078,1148,1220,1384-1420
+win/src/store.rs
+  s_71dd1dbe33157f::t_4c3cbf47395156 4-5
+web/behavior.js
+  s_71dd1dbe33157f::t_2ad168931e90f7 1308-1309
+  s_71dd1dbe33157f::t_e4e4caf800a66a 542
+  s_71dd1dbe33157f::t_240173ab3ee7ad 597
+web/custom.html
+  s_71dd1dbe33157f::t_a9f6378c9ffa40 40,175,194,198,200-205,214,224,228-230,232-235
+  s_71dd1dbe33157f::t_b94b15d3cc4e08 1-30,32-39,41-42,44-174,176-193,195-197,199,206-213,215-223,225-227,231,236-306
+web/index.html
+  s_71dd1dbe33157f::t_2ad168931e90f7 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "b35e835535a662719f97097f5523152b120f04a8",
+  "prompts": {},
+  "sessions": {
+    "s_71dd1dbe33157f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d816414c-5606-4d44-9203-2b73d6587e9d",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
