@@ -1,0 +1,54 @@
+win/src/store.rs
+  s_611fe16fc0c5f8::t_9bc63c6d44ccde 4-5
+mac/AppMenu.swift
+  s_611fe16fc0c5f8::t_296692a50fada4 14,69-70,143-150
+web/cat.js
+  s_611fe16fc0c5f8::t_d0c0678586f543 1131,1133,1167-1169
+web/keyboard.js
+  s_611fe16fc0c5f8::t_978ece4152f53d 121-123,128,225,275-286
+docs/web.md
+  s_611fe16fc0c5f8::t_c8ebe9f2063800 11,56-60,62-63
+  s_611fe16fc0c5f8::t_b335735907eb86 61
+win/src/main.rs
+  s_611fe16fc0c5f8::t_9bc63c6d44ccde 48,172-183,305,309-310,313,320-324,343-344,956-982,1165-1184,1186-1187,1282-1283,1447-1448,1450,1470,1475-1478
+docs/hosts.md
+  s_611fe16fc0c5f8::t_c8ebe9f2063800 29,31
+docs/architecture.md
+  s_611fe16fc0c5f8::t_c8ebe9f2063800 85-86,122,130-132
+web/custom.js
+  s_611fe16fc0c5f8::t_a56b8ff11c516d 5-6
+  s_611fe16fc0c5f8::t_7baf57b6a2c745 63-64,68,70,72
+  s_611fe16fc0c5f8::t_13dbc626ee81d0 111-150
+docs/README.md
+  s_611fe16fc0c5f8::t_b335735907eb86 30
+linux/check.js
+  s_611fe16fc0c5f8::t_28656ac038fb59 163-175
+mac/Custom.swift
+  s_611fe16fc0c5f8::t_f65d4d15ca07fa 5-6,12-13,17-19,48-50,90-106
+linux/src/main.js
+  s_611fe16fc0c5f8::t_49381a8a4ea4ad 20,128-141,189,192,206-207,689-692,727-729,840-842,844,847-848,851,882-898
+mac/App.swift
+  s_611fe16fc0c5f8::t_296692a50fada4 66-81,274,277-278,281-282
+web/custom.html
+  s_611fe16fc0c5f8::t_7ff0ab1cd9e387 15-17,63-64,67,87,103-104
+  s_611fe16fc0c5f8::t_73da70200ffeee 119-133,135-137
+  s_611fe16fc0c5f8::t_7148966d5f4d22 197,199,203-209,211-212,214,218,221,224-225,227,231
+  s_611fe16fc0c5f8::t_fd65b8671bda66 210
+  s_611fe16fc0c5f8::t_f25191293d6de1 256,260,268-269,271,275-276,279,288-290,295,321-322,324,345,356,363,435,450-474,477,480
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "740fdb49cf9c6c896bdaf02e6544d24d7503bbfd",
+  "prompts": {},
+  "sessions": {
+    "s_611fe16fc0c5f8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "84224a26-b594-4614-afe7-e2ca8f9f921f",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
