@@ -1,0 +1,42 @@
+win/package-lock.json
+  s_2c7b064c9fe5f9::t_2d3fd3a2088eb9 3,9
+win/tauri.dist.conf.json
+  s_2c7b064c9fe5f9::t_074209c665cbc6 1-5
+.gitignore
+  s_2c7b064c9fe5f9::t_074209c665cbc6 19,33
+.github/workflows/build.yml
+  s_2c7b064c9fe5f9::t_48e3a46caa42eb 74-75
+  s_2c7b064c9fe5f9::t_667adb36b55485 200-201
+  s_2c7b064c9fe5f9::t_b31110608550db 289
+linux/package-lock.json
+  s_2c7b064c9fe5f9::t_2d3fd3a2088eb9 3,9
+tools/notices/notices.js
+  s_2c7b064c9fe5f9::t_4cc26ede922f2c 1-8,12-84,89-94,96-101
+  s_2c7b064c9fe5f9::t_434ed4b4687f44 85-88
+  s_2c7b064c9fe5f9::t_c7a717f45b4fed 9-11
+  s_2c7b064c9fe5f9::t_d856e4bb56098a 95
+linux/package.json
+  s_2c7b064c9fe5f9::t_109bd3c49e84df 4
+  s_2c7b064c9fe5f9::t_074209c665cbc6 15,51-54
+win/package.json
+  s_2c7b064c9fe5f9::t_109bd3c49e84df 3
+  s_2c7b064c9fe5f9::t_074209c665cbc6 7
+mac/Info.plist
+  s_2c7b064c9fe5f9::t_8b78608c2988f8 16,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "829aa87dfffb487633252dd773462d18c1f50242",
+  "prompts": {},
+  "sessions": {
+    "s_2c7b064c9fe5f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d8769d1c-ded6-49ce-b8dc-5ea580656a88",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
