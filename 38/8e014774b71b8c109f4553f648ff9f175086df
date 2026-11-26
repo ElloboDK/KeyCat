@@ -1,0 +1,21 @@
+win/installer-hooks.nsh
+  s_2c7b064c9fe5f9::t_f34fadc79e44a6 58-67,69-70,72-105
+README.md
+  s_2c7b064c9fe5f9::t_d713af6994056b 44-49,68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "388e014774b71b8c109f4553f648ff9f175086df",
+  "prompts": {},
+  "sessions": {
+    "s_2c7b064c9fe5f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d8769d1c-ded6-49ce-b8dc-5ea580656a88",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
