@@ -1125,7 +1125,7 @@
   // `cable`, `board` and `opacity` are for the desk and the whole picture: the mouse cord, the
   // keyboard's colours, and how see-through everything is (so the text under it shows).
   const look = { style: '2d', coat: 'black', pattern: 'auto', eye: 'auto', shine: 'classic', blush: false, whiskers: true, collar: 'none',
-    softPoints: false, cable: true, board: 'cream', opacity: 1, gloves: 'auto' };
+    softPoints: true, cable: true, board: 'cream', opacity: 1, gloves: 'auto' };
   // 手套颜色: the paws' colour and their toe creases. 'auto' is the coat's own (black paws on a
   // black cat, white socks on a tuxedo).
   const GLOVES = { white: { paw: '#f7f6f0', toe: '#b9b7ae' }, black: { paw: '#1d1d1c', toe: '#4a4a46' },
