@@ -1,0 +1,33 @@
+linux/src/main.js
+  s_2c7b064c9fe5f9::t_5d7f3be05af096 95,171,686
+README.md
+  s_2c7b064c9fe5f9::t_d9108611374558 86
+win/src/store.rs
+  s_2c7b064c9fe5f9::t_5d7f3be05af096 3
+win/src/main.rs
+  s_2c7b064c9fe5f9::t_5d7f3be05af096 138-139,180,302,1035
+web/behavior.js
+  s_2c7b064c9fe5f9::t_5d7f3be05af096 14,1596-1599
+linux/check.js
+  s_2c7b064c9fe5f9::t_e0c17d93180909 118-119
+mac/App.swift
+  s_2c7b064c9fe5f9::t_5d7f3be05af096 92-96,247
+mac/AppMenu.swift
+  s_2c7b064c9fe5f9::t_5d7f3be05af096 71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "e457b5f3120cefd38917309053ce238fbbb75319",
+  "prompts": {},
+  "sessions": {
+    "s_2c7b064c9fe5f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d8769d1c-ded6-49ce-b8dc-5ea580656a88",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
