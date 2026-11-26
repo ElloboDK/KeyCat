@@ -34,6 +34,11 @@ function relaunchOnX11() {
   return true;
 }
 
+// Without a usable GPU (a virtual machine, a blocklisted driver) Chromium no longer falls back to
+// drawing WebGL in software unless told to, and the page cannot start. The switch is "unsafe"
+// for web pages from anywhere; KeyCat only loads its own.
+app.commandLine.appendSwitch('enable-unsafe-swiftshader');
+
 // settings.json, log.txt and status.txt live here: ~/.config/KeyCat. KEYCAT_DATA_DIR moves
 // them, and Chromium's own files, elsewhere for tests.
 if (process.env.KEYCAT_DATA_DIR) app.setPath('userData', path.resolve(process.env.KEYCAT_DATA_DIR));
