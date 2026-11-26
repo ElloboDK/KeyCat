@@ -1,0 +1,19 @@
+linux/check.js
+  s_1abeeacef77a9b::t_f6cca56235491a 199-206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "2d3e64353a6df99cc9bddab656110c22969afd73",
+  "prompts": {},
+  "sessions": {
+    "s_1abeeacef77a9b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4c4bafb8-f425-4826-83f9-c45f8a6ab67f",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
