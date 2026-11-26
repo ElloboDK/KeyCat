@@ -1,0 +1,38 @@
+web/behavior.js
+  s_2c7b064c9fe5f9::t_dca82a1ba5d3ab 1766-1767
+web/keyboard.js
+  s_2c7b064c9fe5f9::t_500c838dcfa28c 221-224,227,229-237,240-246
+  s_2c7b064c9fe5f9::t_ed10ab3e7e5ce8 269-273,278-281,287,289,295-298,300-303,308-309
+  s_2c7b064c9fe5f9::t_8e54780143014d 256
+  s_2c7b064c9fe5f9::t_c2f20ce673c774 290
+  s_2c7b064c9fe5f9::t_a462caee5ba2bb 306
+  s_2c7b064c9fe5f9::t_7ead54820cde5d 311
+  s_2c7b064c9fe5f9::t_4c614d01fe8019 238-239
+  s_2c7b064c9fe5f9::t_cd95094622ad74 332-336
+mac/App.swift
+  s_2c7b064c9fe5f9::t_9d745b09ffdc87 364-368
+  s_2c7b064c9fe5f9::t_95b9de116501b7 21-22,271-272,281,358,369-370,380-386
+linux/src/main.js
+  s_2c7b064c9fe5f9::t_7a84060e93b948 60-61,365-366,387,450,478
+win/src/main.rs
+  s_2c7b064c9fe5f9::t_7a84060e93b948 109-110,527,537,687,741-746,1575
+  s_2c7b064c9fe5f9::t_5aea4ecef85787 570-572
+README.md
+  s_2c7b064c9fe5f9::t_34a3757f024aa7 71-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "577cd8704ef019962616a976b91a2c29b59b9fdf",
+  "prompts": {},
+  "sessions": {
+    "s_2c7b064c9fe5f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d8769d1c-ded6-49ce-b8dc-5ea580656a88",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
