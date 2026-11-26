@@ -1,0 +1,24 @@
+web/cat.js
+  s_2c7b064c9fe5f9::t_5cb73b1000bde9 850-852
+  s_2c7b064c9fe5f9::t_6e60d93566c090 1021-1025
+  s_2c7b064c9fe5f9::t_6dd3e389e2b7ae 857-859,861-862,865-867,869
+web/core.js
+  s_2c7b064c9fe5f9::t_ed4e9359a8a47c 177-179,184,187,194,197-198,203
+  s_2c7b064c9fe5f9::t_5d3feb2482606f 163-165,169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "0cef6baa0bf640cb6b31a86980a66d158f3bda03",
+  "prompts": {},
+  "sessions": {
+    "s_2c7b064c9fe5f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d8769d1c-ded6-49ce-b8dc-5ea580656a88",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
