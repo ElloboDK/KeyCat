@@ -1,0 +1,19 @@
+docs/architecture.md
+  s_611fe16fc0c5f8::t_72715e6ae03f7b 84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "fd939af3fc620b9ddf11e98449cbe9ca32337c33",
+  "prompts": {},
+  "sessions": {
+    "s_611fe16fc0c5f8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "84224a26-b594-4614-afe7-e2ca8f9f921f",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
