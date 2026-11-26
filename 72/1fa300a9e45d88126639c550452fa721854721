@@ -1,0 +1,34 @@
+docs/architecture.md
+  s_611fe16fc0c5f8::t_65ee9f1bd4a15c 84
+web/keyboard.js
+  s_611fe16fc0c5f8::t_0fea7f77af62c6 379,381-384
+  s_611fe16fc0c5f8::t_b30673e1aa9c6c 221-223
+  s_611fe16fc0c5f8::t_712c7dce5c1d78 294-298
+  s_611fe16fc0c5f8::t_e76351be18f2d9 395,398-410
+  s_611fe16fc0c5f8::t_dfe398954e3576 130
+web/boards.js
+  s_611fe16fc0c5f8::t_0678b65acd6f23 1-5,15,18,20,22-29
+  s_611fe16fc0c5f8::t_9c8dcce6a84219 203,212-214,221,238,242
+  s_611fe16fc0c5f8::t_d51a62ac9fabdf 136-202,204-211,215-220,222-237,243-246,250,253-254,257-259
+  s_611fe16fc0c5f8::t_b92f5a6ceabc50 239-241
+docs/web.md
+  s_611fe16fc0c5f8::t_65ee9f1bd4a15c 10,37,42-43,45-47
+docs/hosts.md
+  s_611fe16fc0c5f8::t_f6c679aa9b4fef 31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "721fa300a9e45d88126639c550452fa721854721",
+  "prompts": {},
+  "sessions": {
+    "s_611fe16fc0c5f8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "84224a26-b594-4614-afe7-e2ca8f9f921f",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
