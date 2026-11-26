@@ -1,0 +1,22 @@
+web/index.html
+  s_71dd1dbe33157f::t_1784ad1842a327 15
+web/coats.js
+  s_71dd1dbe33157f::t_1fa84179d671b6 1
+  s_71dd1dbe33157f::t_1784ad1842a327 2-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "b6406198d468310d66bfcf7c48edd771a18ebd91",
+  "prompts": {},
+  "sessions": {
+    "s_71dd1dbe33157f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d816414c-5606-4d44-9203-2b73d6587e9d",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
