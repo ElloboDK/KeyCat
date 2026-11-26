@@ -196,11 +196,18 @@ function step(text) {
     console.error(`--- page console\n${consoleLines.join('\n')}`);
     throw error;
   } finally {
-    await app.close().catch(() => {});
+    // 退出 KeyCat should end it within seconds; if not, say what is still running and kill it.
+    const pid = app.process().pid;
+    const closed = await Promise.race([app.close().then(() => true, () => true), sleep(15e3).then(() => false)]);
+    if (!closed) {
+      console.error(`KeyCat did not quit within 15 s:\n${execFileSync('ps', ['-eo', 'pid,ppid,stat,args']).toString().split('\n').filter(l => /keycat|electron/i.test(l) || l.includes(` ${pid} `)).join('\n')}`);
+      app.process().kill('SIGKILL');
+      process.exitCode = 1;
+    }
     if (!process.env.KEYCAT_KEEP) fs.rmSync(data, { recursive: true, force: true });
     else console.log(`data in ${data}`);
   }
-})().catch(error => {
+})().then(() => process.exit(), error => {
   console.error(error);
   process.exit(1);
 });
