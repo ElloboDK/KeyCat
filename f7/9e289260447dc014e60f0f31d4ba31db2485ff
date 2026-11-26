@@ -1,0 +1,23 @@
+web/behavior.js
+  s_decd5ba79be92e::t_58525df1d5d6ef 294-297
+  s_decd5ba79be92e::t_7b18aa41b98d81 89-90
+  s_decd5ba79be92e::t_5f3949dc6b8597 564-575
+  s_decd5ba79be92e::t_b3a32e9544592d 1717
+  s_decd5ba79be92e::t_e44a16a85cb340 332
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "f79e289260447dc014e60f0f31d4ba31db2485ff",
+  "prompts": {},
+  "sessions": {
+    "s_decd5ba79be92e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3cc69261-93da-43f7-a334-aa860474a220",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
