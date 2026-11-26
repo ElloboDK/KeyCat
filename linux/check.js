@@ -71,7 +71,7 @@ function step(text) {
     return {
       inputReady: host.inputReady,
       keyEvents: host.keyEvents,
-      cats: [...host.cats.values()].map(c => ({ id: c.id, ready: c.pageReady, hit: c.hit, bounds: c.win.getBounds() })),
+      cats: [...host.cats.values()].filter(c => c.win && !c.win.isDestroyed()).map(c => ({ id: c.id, ready: c.pageReady, hit: c.hit, bounds: c.win.getBounds() })),
       settings: store.values,
       petting: host.petting,
       drag: !!host.drag,
