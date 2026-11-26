@@ -86,6 +86,8 @@
   for (const p of Object.values(paws)) {
     Object.assign(p, { spring: new Spring(p.pos, 3.2, 0.78), last: p.pos.clone(), hang: 0, limp: 0, elbow: { at: V(), k: 0 }, elbowWant: null,
       aim: { toes: V(0, 0, 1), top: V(0, 1, 0), k: 0 }, aimWant: null });
+    // The keys you are holding down that this paw pressed, oldest first, and when it last let go of one.
+    Object.assign(p, { held: [], liftedAt: -100 });
   }
   // The paw held up to stop you typing: toes up, the sole to you.
   const STOP_AIM = { toes: V(0.1, 1, 0.15), top: V(0, -0.3, -1) };
@@ -289,7 +291,10 @@
     if (!down) {
       if (tailTap.key === k) { tailTap.down = false; return; }
       k.down = false;
-      for (const p of Object.values(paws)) if (p.key === k) p.down = false;
+      for (const p of Object.values(paws)) {
+        p.held = p.held.filter(x => x !== k);
+        if (p.key === k) { p.down = false; p.liftedAt = t; }
+      }
       return;
     }
     // Typing ends a cup push outright: the paw is needed on the keys.
@@ -324,6 +329,7 @@
     let side = keyboard.leftHand(code) ? 'R' : 'L';
     if (mousing(t)) side = 'R';
     const paw = strike(k, side, t);
+    paw.held.push(k);
     S.strokes.push(t);
     // Mashing the keyboard (four or more keys inside 150 ms) is upsetting.
     if (S.strokes.filter(s => t - s < 0.15).length >= TUNING.mashKeys) poke(0.3, t);
@@ -555,6 +561,18 @@
   // A strike is scripted (it has to land on time); every other paw move goes through the paw's
   // spring so it eases out, carries momentum from the strike, and settles with a small bob.
   function updatePaw(name, paw, t, dt) {
+    // Let go of a key while you still hold another this paw pressed, it goes back onto that one.
+    // Only after a moment, so keys overlapping in fast typing don't drag it back, and never off
+    // the mouse.
+    const held = paw.held[paw.held.length - 1];
+    if (held && !paw.down && t - paw.liftedAt > 0.1 && !(name === 'L' && mousing(t))) {
+      paw.from.copy(paw.pos);
+      paw.key = held;
+      paw.t0 = t;
+      paw.dur = clamp(paw.pos.distanceTo(keyboard.keyTop(held, tmp)) * 0.09, 0.05, 0.1);
+      paw.down = true;
+      paw.lift = 1;
+    }
     const k = paw.key;
     const strikeAge = t - paw.t0;
     if (k && (paw.down || strikeAge < paw.dur + 0.06)) {
@@ -1696,7 +1714,7 @@
       keyboard.releaseAll();
       for (const k of ['shift', 'hunch', 'squash', 'yaw', 'roll', 'gazeX', 'gazeY', 'ears', 'hunt']) P[k].set(0);
       P.pitch.set(-0.28);
-      for (const p of Object.values(paws)) { p.key = null; p.down = false; p.t0 = -100; }
+      for (const p of Object.values(paws)) { p.key = null; p.down = false; p.t0 = -100; p.held = []; }
       Object.assign(tailTap, { key: null, t0: -100, down: false, landAt: -100, reach: 0, hover: 0.12 });
     },
     hitTest,
