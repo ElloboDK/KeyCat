@@ -1,0 +1,23 @@
+web/custom.html
+  s_71dd1dbe33157f::t_02a69be376159e 39
+  s_71dd1dbe33157f::t_9024a7fba8e27c 42-53,93-98,138-144,209-214,217,287-325,327-342,345,348-373,375-385,387-388
+  s_71dd1dbe33157f::t_c72cecf4f76e82 326,343-344,346-347,374,386
+docs/web.md
+  s_71dd1dbe33157f::t_b208f83cc84361 55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "6cca9a6fd7981f2df1986c7141bba3a7bfc4fc06",
+  "prompts": {},
+  "sessions": {
+    "s_71dd1dbe33157f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d816414c-5606-4d44-9203-2b73d6587e9d",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
