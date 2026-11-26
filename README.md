@@ -1,6 +1,6 @@
 # KeyCat
 
-一只趴在键盘上的桌面猫：你打字它伸爪按键，动鼠标它扭头看，摸头会呼噜，没人理会睡着，被烦到会用尾巴捶桌。支持 macOS 13+ 和 Windows 10+，除了从 GitHub 检查和下载更新，不联网。
+一只趴在键盘上的桌面猫：你打字它伸爪按键，动鼠标它扭头看，摸头会呼噜，没人理会睡着，被烦到会用尾巴捶桌。支持 macOS 13+、Windows 10+ 和 Linux（X11），除了从 GitHub 检查和下载更新，不联网。
 
 ![KeyCat](assets/keycat-tour.gif)
 
@@ -19,9 +19,18 @@ curl -L -o /tmp/KeyCat-macOS.zip https://github.com/ElloboDK/KeyCat/releases/lat
 
 **Windows**：从 [Releases](https://github.com/ElloboDK/KeyCat/releases/latest) 下载 `KeyCat-Windows-Setup.exe` 运行。SmartScreen 拦截时点「更多信息 → 仍要运行」。安装包只有几 MB，猫由系统自带的 WebView2 绘制，极少数没装 WebView2 的 Win10 会在安装时自动下载。KeyCat 装在 `C:\Program Files\KeyCat`，安装和每次自动更新都会弹一次 UAC（已经以管理员身份运行时不弹）。1.0.4 及以前装在用户目录里的旧版会自动升级过来并保留设置。
 
+**Linux**（64 位，X11）：Ubuntu、Debian 等用 deb 包，在终端执行
+
+```sh
+curl -L -o /tmp/KeyCat-Linux.deb https://github.com/ElloboDK/KeyCat/releases/latest/download/KeyCat-Linux.deb \
+  && sudo apt install -y /tmp/KeyCat-Linux.deb
+```
+
+装好后在应用列表里打开 KeyCat。其他发行版下载 `KeyCat-Linux.AppImage`，`chmod +x KeyCat-Linux.AppImage` 后直接运行，不用安装，也不需要 libfuse2。KeyCat 只支持 X11：Wayland 不让程序收到发给别的窗口的按键，在 Wayland 下猫能显示，但对打字没反应，菜单里会提示。Ubuntu 在登录界面点右下角齿轮，选「Ubuntu on Xorg」即可。GNOME 默认不显示托盘图标，要装 AppIndicator 扩展（Ubuntu 自带），没有托盘时右键猫也能打开菜单。deb 版和 AppImage 都会自动更新：启动 15 秒后和之后每 6 小时检查一次，有新版就在后台下载，在菜单里点「重启并更新」时替换。deb 版更新时会弹窗要密码，AppImage 直接替换文件本身，所以要放在自己有写权限的目录里。
+
 ## 使用
 
-猫住在菜单栏（Windows 是托盘）。右键猫或点图标打开菜单。最上面是番茄钟、今日小结和拍动图；「外观」管猫的样子（毛色、大小、眼睛、手套颜色（黑猫默认黑手套）、项圈等，暹罗和布偶的「重点色柔和渐变」默认开着，关掉是硬边面罩）；「桌面」管键盘颜色、鼠标线、桌上的杯子和透明度（猫挡住字时调低一点）；「习性」管多久睡着、呼噜声，在其中的「调节反应…」里选性格（高冷、粘人、暴躁、胆小），或者逐项调整烦躁、好奇、呼噜、休息提醒和番茄钟，底下的按钮可以让它当场演示各种动作。按住猫身体可以拖动位置。直播或录屏时可以打开「鼠标穿透」，点击会直接落到猫下面的窗口，猫照常显示和反应，这时菜单只能从菜单栏或托盘图标打开。
+猫住在菜单栏（Windows 和 Linux 是托盘）。右键猫或点图标打开菜单。最上面是番茄钟、今日小结和拍动图；「外观」管猫的样子（毛色、大小、眼睛、手套颜色（黑猫默认黑手套）、项圈等，暹罗和布偶的「重点色柔和渐变」默认开着，关掉是硬边面罩）；「桌面」管键盘颜色、鼠标线、桌上的杯子和透明度（猫挡住字时调低一点）；「习性」管多久睡着、呼噜声，在其中的「调节反应…」里选性格（高冷、粘人、暴躁、胆小），或者逐项调整烦躁、好奇、呼噜、休息提醒和番茄钟，底下的按钮可以让它当场演示各种动作。按住猫身体可以拖动位置。直播或录屏时可以打开「鼠标穿透」，点击会直接落到猫下面的窗口，猫照常显示和反应，这时菜单只能从菜单栏或托盘图标打开。
 
 它自己也会找事做：闲着时会盯上旁边的杯子，看你一眼，举着爪子试探几下再推下去（推到一半被你动鼠标撞见，它会僵住，然后要么若无其事地收回爪子，要么当着你的面推下去）；睡醒会打哈欠、伸懒腰；睡着后太久没人理，就扑到键盘上趴成圆圆一团，两只前爪搭在键盘两头、脸埋在中间睡，睡熟了爪子还会抽动一下。摸头一会儿它会呼噜、踩奶（声音默认关，在菜单里打开）；双击猫头等于对它慢眨眼，它可能眨回来。几种快捷键它认得：连按退格会冒汗，保存会点头，复制时它把东西举在头顶，粘贴时放下。
 
@@ -45,22 +54,28 @@ cd win && npm ci
 npm start                # 本机调试，macOS 上也能跑
 npm run dist             # → win/target/release/bundle/nsis/KeyCat_<版本>_x64-setup.exe（需 Rust 和 Node.js 22+，在 Windows 上执行）
 
+cd linux && npm ci
+npm run input && npm start   # 本机调试（Electron），macOS 上也能跑，只是收不到全局按键
+npm run dist             # → linux/dist/KeyCat-Linux.AppImage、.deb、latest-linux.yml（需 Rust 的 x86_64-unknown-linux-musl 目标，在 Linux 上执行）
+npm run check            # 用 Playwright 把菜单点一遍检查效果；在 Linux 上装了 xdotool 时还会真的打字、摸头、拖动
+
 node tools/site/build.js # 下载页 → _site/
 ```
 
 本地构建时，mac 版用 `signing/` 里的本地证书签名：第一次构建自动生成，以后一直用这张，重新编译后「输入监控」授权才不会失效。这张证书只用于自己调试，和正式发布用的不是一张，不要提交 `signing/` 目录。
 
-安装包由 GitHub Actions 构建（`.github/workflows/build.yml`）：维护者推 `vX.Y.Z` tag 后，用正式身份签名并发布到本仓库的 Release，已安装的两端都从这里下载更新。
+安装包由 GitHub Actions 构建（`.github/workflows/build.yml`）：维护者推 `vX.Y.Z` tag 后，用正式身份签名并发布到本仓库的 Release，已安装的各平台都从这里下载更新。
 
 参与开发见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 目录
 
 ```
-web/     两端共用的 three.js 场景：猫、键盘、动作。tuning.js 是可调参数和性格的唯一来源，life.js 是猫记住的东西，
+web/     各平台共用的 three.js 场景：猫、键盘、动作。tuning.js 是可调参数和性格的唯一来源，life.js 是猫记住的东西，
          stats.html 是今日小结
 mac/     macOS 外壳（Swift）：浮窗、菜单、键鼠监听、自动更新、构建/签名/打包脚本
 win/     Windows 外壳（Tauri，Rust）：托盘、全局键鼠钩子、自动更新，页面由系统 WebView2 绘制
+linux/   Linux 外壳（Electron）：托盘、自动更新、AppImage 和 deb 打包；input/ 是监听 X11 键鼠的小程序（Rust，XInput2）
 site/    下载页，tools/site/build.js 把它和 web/ 拼好，由 .github/workflows/pages.yml 部署到 GitHub Pages
 assets/  README 和下载页用的动图
 tools/   开发用脚本：serve.py 起本地服务，tour_gif.py、readme_gif.py 生成上面的动图，其余脚本截图对比
@@ -72,4 +87,4 @@ KeyCat 按 [GNU General Public License v3.0](LICENSE) 开源，Copyright (C) 202
 
 「KeyCat」这个名字和图标不在授权范围内：发布修改版请换一个名字和图标，别让人误以为是官方版本。
 
-这是一个从零实现的项目，形象和交互参考了一款付费桌面宠物应用，不包含对方的任何素材。three.js 为 MIT 许可（见 `web/THREE_LICENSE`），Tauri 为 MIT / Apache-2.0 双许可。
+这是一个从零实现的项目，形象和交互参考了一款付费桌面宠物应用，不包含对方的任何素材。three.js 为 MIT 许可（见 `web/THREE_LICENSE`），Tauri 为 MIT / Apache-2.0 双许可，Electron 为 MIT 许可。
