@@ -50,6 +50,14 @@ function step(text) {
     ...(process.env.KEYCAT_APP ? { executablePath: process.env.KEYCAT_APP, args: sandbox } : { executablePath: require('electron'), args: [__dirname, ...sandbox] }),
     env: { ...process.env, KEYCAT_DATA_DIR: data },
   });
+  // What the pages print, shown when a step fails.
+  const consoleLines = [];
+  const listen = page => {
+    page.on('console', m => consoleLines.push(`${page.url().split('/').pop()}: ${m.type()}: ${m.text()}`));
+    page.on('pageerror', e => consoleLines.push(`${page.url().split('/').pop()}: error: ${e.message}`));
+  };
+  app.windows().forEach(listen);
+  app.on('window', listen);
   // The host's internals, from the main process: main.js exports them for this script. Playwright
   // starts the app through a loader of its own, so main.js is found in the module cache.
   await app.evaluate(() => {
@@ -180,6 +188,13 @@ function step(text) {
     const log = fs.readFileSync(path.join(data, 'log.txt'), 'utf8');
     assert.doesNotMatch(log, /failed/, log);
     console.log('ok');
+  } catch (error) {
+    for (const name of ['log.txt', 'status.txt']) {
+      const file = path.join(data, name);
+      console.error(`--- ${name}\n${fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '(none)'}`);
+    }
+    console.error(`--- page console\n${consoleLines.join('\n')}`);
+    throw error;
   } finally {
     await app.close().catch(() => {});
     if (!process.env.KEYCAT_KEEP) fs.rmSync(data, { recursive: true, force: true });
