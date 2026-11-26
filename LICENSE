@@ -1,0 +1,61 @@
+KeyCat 用户许可协议
+
+适用于 KeyCat v1.2.0 及以后的版本。
+Copyright (C) 2026 ElloboDK。保留所有权利。
+
+KeyCat 是免费软件，但不开源。下载、安装或使用 KeyCat，即表示你同意本协议。
+
+1. 你可以做的
+   - 免费下载、安装和使用 KeyCat，个人和工作中使用都可以，设备数量不限。
+   - 把官方发布的、未经修改的安装包免费分享给别人。
+
+2. 你不能做的
+   - 收费转卖：不能出售、出租 KeyCat 或它的安装包，也不能以任何形式向别人收费提供，包括打包进收费的合集、网盘、会员或代下载服务。
+   - 修改后发布：不能修改 KeyCat 后发布或分发，包括加入眼镜、耳机等配件、换皮、换名，也不能把它的代码、模型、动作或素材用在你发布的其他作品里。
+
+3. 名称和图标
+   「KeyCat」这个名字和图标属于 ElloboDK，本协议不授予使用它们的权利。
+
+4. 第三方组件
+   KeyCat 包含的开源组件（例如 three.js、Tauri、Electron）按它们各自的许可证使用，这些许可证不受本协议影响。
+
+5. 无担保
+   KeyCat 按「原样」提供，不提供任何明示或默示的担保。在法律允许的最大范围内，ElloboDK 不对使用或无法使用 KeyCat 造成的任何损失负责。
+
+6. 终止
+   违反本协议的，本协议授予你的权利自动终止。
+
+7. 其他
+   ElloboDK 可以更新本协议，新版本适用于之后发布的版本。本协议的中英文版本不一致时，以中文版本为准。
+
+---
+
+KeyCat End User License Agreement
+
+Applies to KeyCat v1.2.0 and later.
+Copyright (C) 2026 ElloboDK. All rights reserved.
+
+KeyCat is free of charge but not open source. By downloading, installing or using KeyCat you agree to this agreement.
+
+1. What you may do
+   - Download, install and use KeyCat for free, personally or at work, on any number of devices.
+   - Share the official, unmodified installers with others free of charge.
+
+2. What you may not do
+   - Sell it: you may not sell or rent KeyCat or its installers, or provide them to others for any fee in any form, including in paid bundles, file-sharing, membership or download services.
+   - Publish modified versions: you may not publish or distribute KeyCat after modifying it, including adding accessories such as glasses or headphones, reskinning or renaming it, and you may not use its code, models, animations or assets in other works you publish.
+
+3. Name and icon
+   The name "KeyCat" and its icon belong to ElloboDK. This agreement grants no right to use them.
+
+4. Third-party components
+   The open-source components included in KeyCat (such as three.js, Tauri and Electron) are used under their own licenses, which this agreement does not affect.
+
+5. No warranty
+   KeyCat is provided "as is", without warranty of any kind, express or implied. To the maximum extent permitted by law, ElloboDK is not liable for any damages arising from the use of or inability to use KeyCat.
+
+6. Termination
+   Your rights under this agreement end automatically if you breach it.
+
+7. Other
+   ElloboDK may update this agreement; a new version applies to versions released afterwards. Where the Chinese and English versions differ, the Chinese version prevails.
