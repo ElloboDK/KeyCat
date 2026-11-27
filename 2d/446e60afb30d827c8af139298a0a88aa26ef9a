@@ -1,0 +1,19 @@
+web/boards.js
+  s_5352cc7010f7e8::t_1f2e480675c1d6 254
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "2d446e60afb30d827c8af139298a0a88aa26ef9a",
+  "prompts": {},
+  "sessions": {
+    "s_5352cc7010f7e8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4a8c75a1-9e43-4726-8250-cd1709024a2d",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
