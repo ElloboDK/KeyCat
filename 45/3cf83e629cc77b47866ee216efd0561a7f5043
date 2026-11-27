@@ -1,0 +1,24 @@
+mac/Info.plist
+  s_389b3fa03d168d::t_58d0d284a36354 13-14
+docs/release.md
+  s_389b3fa03d168d::t_6616ed5a018c4e 47
+mac/build.sh
+  s_389b3fa03d168d::t_39f01da253cc4d 16-21
+  s_389b3fa03d168d::t_4a7a9d2789ca45 7-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "453cf83e629cc77b47866ee216efd0561a7f5043",
+  "prompts": {},
+  "sessions": {
+    "s_389b3fa03d168d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f599be2-f036-4535-92b5-aed004f6d145",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
