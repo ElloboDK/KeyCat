@@ -1,0 +1,25 @@
+win/package.json
+  s_4fb9edd4daef00::t_4a674a29dbf9c5 3
+linux/package.json
+  s_4fb9edd4daef00::t_4a674a29dbf9c5 4
+linux/package-lock.json
+  s_4fb9edd4daef00::t_277dc9f8370afa 3,9
+mac/Info.plist
+  s_4fb9edd4daef00::t_a8e2100a3fe2ff 18,20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "851715620150dbb01e106719953d6ea92c3b149e",
+  "prompts": {},
+  "sessions": {
+    "s_4fb9edd4daef00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "03ede1e0-bf79-427e-a6fb-8ce3d3ddce55",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
