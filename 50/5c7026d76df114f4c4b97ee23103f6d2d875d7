@@ -1,0 +1,49 @@
+docs/hosts.md
+  s_389b3fa03d168d::t_4a12fd3280f6af 29,38
+linux/check.js
+  s_389b3fa03d168d::t_a27983d3c43b28 135-141,147-148
+mac/main.swift
+  s_389b3fa03d168d::t_a5880c17785501 124
+mac/AppMenu.swift
+  s_389b3fa03d168d::t_cb7e8d921f857b 83-86
+README.md
+  s_389b3fa03d168d::t_4a12fd3280f6af 50
+mac/App.swift
+  s_389b3fa03d168d::t_9c644c203d765d 302-303
+  s_389b3fa03d168d::t_cb7e8d921f857b 168-177
+web/behavior.js
+  s_389b3fa03d168d::t_a94c2b5d0b87cb 13,292,306-308,1021-1022
+win/src/main.rs
+  s_389b3fa03d168d::t_117af2f02d96cd 157-160,224-225,363-364,1237-1248
+win/src/store.rs
+  s_389b3fa03d168d::t_117af2f02d96cd 3-4
+docs/dev.md
+  s_389b3fa03d168d::t_50b98770d4c0eb 53
+docs/architecture.md
+  s_389b3fa03d168d::t_4a12fd3280f6af 93-94
+linux/src/main.js
+  s_389b3fa03d168d::t_2e2f330d29f1af 88,111-114,223-224,754-755
+docs/web.md
+  s_389b3fa03d168d::t_4a12fd3280f6af 16,130-135
+web/sound.js
+  s_389b3fa03d168d::t_cd322d21ed9856 132,179-180
+  s_389b3fa03d168d::t_d57cbfd0a32e23 120,191
+  s_389b3fa03d168d::t_f9e00265941b36 1-4,7-15,17-18,22,31-45,68-70,73-119,121-131,133-178,181-190,192-193,198-199,201,204,206,209-210,213-228,230-231
+  s_389b3fa03d168d::t_a682533dcec45b 23-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "505c7026d76df114f4c4b97ee23103f6d2d875d7",
+  "prompts": {},
+  "sessions": {
+    "s_389b3fa03d168d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f599be2-f036-4535-92b5-aed004f6d145",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
