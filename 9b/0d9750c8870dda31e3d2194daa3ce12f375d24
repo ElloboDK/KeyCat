@@ -1,0 +1,21 @@
+web/behavior.js
+  s_762ef74ab70a67::t_748f0458ccfa3a 1687-1688
+docs/web.md
+  s_762ef74ab70a67::t_85ab1a003d83d3 101
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "9b0d9750c8870dda31e3d2194daa3ce12f375d24",
+  "prompts": {},
+  "sessions": {
+    "s_762ef74ab70a67": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4c265bac-0d18-4f18-90b1-e9e07e04dabd",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
