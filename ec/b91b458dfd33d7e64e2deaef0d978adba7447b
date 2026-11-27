@@ -1,0 +1,34 @@
+docs/architecture.md
+  s_5352cc7010f7e8::t_ed774319e6b772 78-142
+docs/hosts.md
+  s_5352cc7010f7e8::t_ed774319e6b772 29-31,53
+  s_5352cc7010f7e8::t_8d3fa1165480b8 33-34
+docs/README.md
+  s_5352cc7010f7e8::t_ed774319e6b772 3-65
+  s_5352cc7010f7e8::t_8d3fa1165480b8 81
+docs/web.md
+  s_5352cc7010f7e8::t_ed774319e6b772 10-70
+CLAUDE.md
+  s_5352cc7010f7e8::t_a2ee2caaf2e0a3 17-70
+docs/dev.md
+  s_5352cc7010f7e8::t_8d3fa1165480b8 51
+docs/release.md
+  s_5352cc7010f7e8::t_452956c4c1ef88 72
+  s_5352cc7010f7e8::t_50c568b5b1e000 3-21,76-127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "ecb91b458dfd33d7e64e2deaef0d978adba7447b",
+  "prompts": {},
+  "sessions": {
+    "s_5352cc7010f7e8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4a8c75a1-9e43-4726-8250-cd1709024a2d",
+        "model": "unknown"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
