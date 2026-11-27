@@ -1,0 +1,25 @@
+docs/architecture.md
+  s_2169c4d0612406::t_ffbd4cafa76ac6 62
+linux/check.js
+  s_2169c4d0612406::t_d59c6ac109f326 284-288
+docs/hosts.md
+  s_2169c4d0612406::t_aceb72e69244c3 30
+README.md
+  s_2169c4d0612406::t_bdc6e31cda7f99 53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "579520bdffb41d2d107b31914553c679e0f5ae4d",
+  "prompts": {},
+  "sessions": {
+    "s_2169c4d0612406": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cd3dce35-8000-4873-9297-1f8ee657a1c6",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
