@@ -1,0 +1,19 @@
+README.md
+  s_ad0ce0109a9d45::t_025526dddf7bfb 93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "545c4cd82d48f374f69438e41e92ad5433104e0f",
+  "prompts": {},
+  "sessions": {
+    "s_ad0ce0109a9d45": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "10f2f913-951b-4f95-bbac-eb6ffcbe7dff",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "ElloboDK <48611756+ElloboDK@users.noreply.github.com>"
+    }
+  }
+}
